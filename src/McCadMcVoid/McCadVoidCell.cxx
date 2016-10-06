@@ -613,13 +613,11 @@ TCollection_AsciiString McCadVoidCell::GetOutVoidExpression()
     m_szExpression.Clear();
     m_szExpression += "(";
 
-    int iInitSurfNum = McCadConvertConfig::GetInitSurfNum()-1;
     for (Standard_Integer i = 0; i < m_BndFaceList.size(); i++)
     {
         McCadExtBndFace * pExtFace = m_BndFaceList[i];
 
         int iFaceNum = pExtFace->GetFaceNum();
-        iFaceNum > 0 ? iFaceNum += iInitSurfNum : iFaceNum -= iInitSurfNum;
         iFaceNum *= -1;
 
         m_szExpression += TCollection_AsciiString(iFaceNum);
