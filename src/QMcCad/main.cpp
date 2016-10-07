@@ -147,6 +147,14 @@ if(argc > 1)
         //prmtName = "-0";
         /* test code */
 
+
+        /* test code */
+//        inParameter = "-m";
+//        inName = "convertedTest.stp";
+//        prmtName = "material.xml";
+        //prmtName = "-0";
+        /* test code */
+
         // Expander
         if(inParameter.IsEqual("-e") || inParameter.IsEqual("--explode")) {
             cout << "\nMcCad_Exploder\n====================\n\n";

@@ -40,9 +40,7 @@ public:
     /** Print the group information, including material name, group name, material id and density */
     virtual void PrintGroupInfo(const int iSolid, Standard_OStream& theStream);
 
-private:
-
-
+protected:
 
     /**< A new cell expression writor, which generate a cell number list first, then
          remove the repeated surfaces */
@@ -52,7 +50,7 @@ private:
     /**< Get the void expression */
     TCollection_AsciiString GetVoidExpn(McCadVoidCell *& pVoidCell);
 
-    TCollection_AsciiString GetCellExpnOld(McCadConvexSolid *& pSolid); /**< Get the cell expression */
+//  TCollection_AsciiString GetCellExpnOld(McCadConvexSolid *& pSolid); /**< Get the cell expression */
 };
 
 #endif // MCCADMCNPWRITER_HXX

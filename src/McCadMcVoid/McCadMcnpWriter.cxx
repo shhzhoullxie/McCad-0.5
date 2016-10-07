@@ -64,6 +64,14 @@ void McCadMcnpWriter::PrintCellDesc(Standard_OStream& theStream)
 
     Standard_Integer iCellNum = m_iInitCellNum;   // Get the initial cell number.
 
+    Standard_Integer iTotalNum = pData->m_SolidList.size() + iCellNum;
+    Standard_Integer iWidth = TCollection_AsciiString(iTotalNum).Length();
+
+    iWidth < 6? iWidth = 6: iWidth += 1;
+    m_iCellNumWidth = iWidth;
+    m_iMatWidth = 14;
+    m_iCellMatWidth = m_iCellNumWidth+m_iMatWidth;
+
     for (unsigned int i = 0; i < pData->m_SolidList.size(); i++)
     {
         McCadSolid * pSolid = pData->m_SolidList.at(i);
@@ -72,11 +80,12 @@ void McCadMcnpWriter::PrintCellDesc(Standard_OStream& theStream)
         if (m_bHaveMaterial)
         {
             PrintGroupInfo(i+1,theStream);
-        }
+        }        
 
         theStream.setf(ios::left);
-        theStream<<setw(6)<<iCellNum;                   // Output the cell number.
+        theStream<<setw(m_iCellNumWidth)<<iCellNum;                   // Output the cell number.
         theStream<<setw(4)<<pSolid->GetID();            // Output the material number.
+
         if(!m_bHaveMaterial)
         {
             theStream<<fixed<<setprecision(4)<<setw(1)<<"";
@@ -127,18 +136,18 @@ void McCadMcnpWriter::PrintCellDesc(Standard_OStream& theStream)
             }
             else
             {
-                theStream<<setw(20)<<""<<str_left<<endl;
+                theStream<<setw(m_iCellMatWidth)<<""<<str_left<<endl;
             }
         }while(!str_right.IsEmpty());
 
         // Set the importances of neutron and photon
         if(!m_bHaveMaterial)
         {
-            theStream<<setw(11)<<""<<"imp:n=1 imp:p=1"<<endl;
+            theStream<<setw(m_iCellNumWidth+5)<<""<<"imp:n=1 imp:p=1"<<endl;
         }
         else
         {
-            theStream<<setw(20)<<""<<"imp:n=1 imp:p=1"<<endl;
+            theStream<<setw(m_iCellMatWidth)<<""<<"imp:n=1 imp:p=1"<<endl;
         }
         iCellNum ++;
     }
@@ -241,8 +250,8 @@ void McCadMcnpWriter::PrintVoidDesc(Standard_OStream& theStream)
         assert(pVoid);        
 
         theStream.setf(ios::left);
-        theStream<<setw(6)<<iCellNum;   // Output the cell number.
-        theStream<<setw(5)<<0;          // Output the material number.
+        theStream<<setw(m_iCellNumWidth)<<iCellNum;     // Output the cell number.
+        theStream<<setw(5)<<0;                          // Output the material number.
 
         iCellNum ++;
 
@@ -263,23 +272,23 @@ void McCadMcnpWriter::PrintVoidDesc(Standard_OStream& theStream)
             else
             {
                 {
-                    theStream<<setw(11)<<""<<str_left<<endl;
+                    theStream<<setw(m_iCellNumWidth+5)<<""<<str_left<<endl;
                 }
             }
 
         }while(!str_right.IsEmpty());
 
-        theStream<<setw(11)<<""<<"imp:n=1 imp:p=1"<<endl; // Output the importance.
+        theStream<<setw(m_iCellNumWidth+5)<<""<<"imp:n=1 imp:p=1"<<endl; // Output the importance.
     }
 
     assert(pData->m_pOutVoid);
 
     theStream.setf(ios::left);
-    theStream<<setw(6)<<iCellNum;
+    theStream<<setw(m_iCellNumWidth)<<iCellNum;
     theStream<<setw(5)<<0;
 
     theStream<<pData->m_pOutVoid->GetOutVoidExpression()<<endl;// Output the outer spaces except for void and material solids.
-    theStream<<setw(11)<<""<<"imp:n=0 imp:p=0"<<endl;   // Output the importance.
+    theStream<<setw(m_iCellNumWidth+5)<<""<<"imp:n=0 imp:p=0"<<endl;   // Output the importance.
 }
 
 
@@ -557,17 +566,13 @@ TCollection_AsciiString McCadMcnpWriter::GetCellExpn(McCadConvexSolid *& pSolid)
                     }
                 }
             }
-//            if(UniCellList.size() == 1)
-//            {
-//                IntCellList.push_back(UniCellList.at(0));
-//            }
         }
     }
 
     /// Generate the expression of cell
     TCollection_AsciiString szExpression;
 
-    int iStrLength = 20; //initial string for describing the cell no and material
+    int iStrLength = m_iCellMatWidth + 2; //initial string for describing the cell no and material
 
     for (unsigned int i = 0; i < IntCellList.size(); i++)
     {
@@ -579,7 +584,7 @@ TCollection_AsciiString McCadMcnpWriter::GetCellExpn(McCadConvexSolid *& pSolid)
         if (iStrLength >= 80)
         {
             szExpression += "&";
-            iStrLength = 20 + TCollection_AsciiString(iFaceNum).Length();
+            iStrLength = m_iCellMatWidth + 2 + TCollection_AsciiString(iFaceNum).Length();
         }
         else
         {
@@ -608,7 +613,7 @@ TCollection_AsciiString McCadMcnpWriter::GetCellExpn(McCadConvexSolid *& pSolid)
             if (iStrLength >= 80)
             {
                 szExpression += "&";
-                iStrLength = 20 + TCollection_AsciiString(iFaceNum).Length();
+                iStrLength = m_iCellMatWidth + 2 + TCollection_AsciiString(iFaceNum).Length();
             }
             else
             {
@@ -632,126 +637,121 @@ TCollection_AsciiString McCadMcnpWriter::GetCellExpn(McCadConvexSolid *& pSolid)
 }
 
 
+///** ********************************************************************
+//* @brief Get the MCNP cell expression of solid
+//*
+//* @param
+//* @return TCollection_AsciiString
+//*
+//* @date 31/8/2012
+//* @author  Lei Lu
+//***********************************************************************/
+//TCollection_AsciiString McCadMcnpWriter::GetCellExpnOld(McCadConvexSolid *& pSolid)
+//{
+//    TCollection_AsciiString szExpression;
 
+//    TCollection_AsciiString szAstFaceUni = "";
+//    TCollection_AsciiString szAstFaceSub = "";
 
-/** ********************************************************************
-* @brief Get the MCNP cell expression of solid
-*
-* @param
-* @return TCollection_AsciiString
-*
-* @date 31/8/2012
-* @author  Lei Lu
-***********************************************************************/
-TCollection_AsciiString McCadMcnpWriter::GetCellExpnOld(McCadConvexSolid *& pSolid)
-{
-    TCollection_AsciiString szExpression;
+//    int iInitSurfNum = m_iInitFaceNum-1;
+//    int iStrLength = 20; //initial string for describing the cell no and material
 
-    TCollection_AsciiString szAstFaceUni = "";
-    TCollection_AsciiString szAstFaceSub = "";
+//    for (Standard_Integer i = 0; i < (pSolid->GetFaces()).size(); i++)
+//    {
+//        McCadExtBndFace * pExtFace = (pSolid->GetFaces()).at(i);
 
-    int iInitSurfNum = m_iInitFaceNum-1;
-    int iStrLength = 20; //initial string for describing the cell no and material
+//        int iFaceNum = pExtFace->GetFaceNum();
+//        iFaceNum > 0 ? iFaceNum += iInitSurfNum : iFaceNum -= iInitSurfNum;
+//        //iFaceNum = RefreshSurfNum(iFaceNum);
+//        iStrLength += TCollection_AsciiString(iFaceNum).Length();
 
-    for (Standard_Integer i = 0; i < (pSolid->GetFaces()).size(); i++)
-    {
-        McCadExtBndFace * pExtFace = (pSolid->GetFaces()).at(i);
+//        /***************** the length of cell expression can not be larger than 80 *******/
+//        /***************** & is used for splitting the expression ************************/
+//        if (iStrLength >= 80)
+//        {
+//            szExpression += "&";
+//            iStrLength = 20 + TCollection_AsciiString(iFaceNum).Length();
+//        }
+//        else
+//        {
+//            szExpression += " ";
+//            iStrLength ++;
+//        }
+//        /**********************************************************************************/
 
-        int iFaceNum = pExtFace->GetFaceNum();
-        iFaceNum > 0 ? iFaceNum += iInitSurfNum : iFaceNum -= iInitSurfNum;
-        //iFaceNum = RefreshSurfNum(iFaceNum);
-        iStrLength += TCollection_AsciiString(iFaceNum).Length();
+//       szExpression += TCollection_AsciiString(iFaceNum);
 
-        /***************** the length of cell expression can not be larger than 80 *******/
-        /***************** & is used for splitting the expression ************************/
-        if (iStrLength >= 80)
-        {
-            szExpression += "&";
-            iStrLength = 20 + TCollection_AsciiString(iFaceNum).Length();
-        }
-        else
-        {
-            szExpression += " ";
-            iStrLength ++;
-        }
-        /**********************************************************************************/
+//       if (pExtFace->HaveAstSurf())
+//       {
+//            for(unsigned j = 0; j < pExtFace->GetAstFaces().size(); j++)
+//            {
+//                McCadExtAstFace *pAstFace = pExtFace->GetAstFaces().at(j);
 
-       szExpression += TCollection_AsciiString(iFaceNum);
+//                int iAstFaceNum = pAstFace->GetFaceNum();
+//                iAstFaceNum > 0 ? iAstFaceNum += iInitSurfNum : iAstFaceNum -= iInitSurfNum;
+//                //iAstFaceNum = RefreshSurfNum(iAstFaceNum);
 
-       if (pExtFace->HaveAstSurf())
-       {
-            for(unsigned j = 0; j < pExtFace->GetAstFaces().size(); j++)
-            {
-                McCadExtAstFace *pAstFace = pExtFace->GetAstFaces().at(j);
+//                if (pAstFace->IsSplitFace())
+//                {
+//                    szAstFaceUni += TCollection_AsciiString(iAstFaceNum);
+//                    szAstFaceUni += ":";
+//                }
+//                else
+//                {
+//                    szAstFaceSub += TCollection_AsciiString(iAstFaceNum);
+//                    szAstFaceSub += " ";
+//                }
+//            }
+//        }
+//    }
 
-                int iAstFaceNum = pAstFace->GetFaceNum();
-                iAstFaceNum > 0 ? iAstFaceNum += iInitSurfNum : iAstFaceNum -= iInitSurfNum;
-                //iAstFaceNum = RefreshSurfNum(iAstFaceNum);
+//    szExpression += " ";
 
-                if (pAstFace->IsSplitFace())
-                {
-                    szAstFaceUni += TCollection_AsciiString(iAstFaceNum);
-                    szAstFaceUni += ":";
-                }
-                else
-                {
-                    szAstFaceSub += TCollection_AsciiString(iAstFaceNum);
-                    szAstFaceSub += " ";
-                }
-            }
-        }
-    }
+//    if (!szAstFaceSub.IsEmpty())
+//    {
+//        szAstFaceSub.Remove(szAstFaceSub.Length());
 
-    szExpression += " ";
+//        // Avoid the length of expression beyond 80
+//        iStrLength += szAstFaceSub.Length();
+//        if (iStrLength >= 80)
+//        {
+//            szExpression += "&";
+//            iStrLength = 20;
+//        }
 
-    if (!szAstFaceSub.IsEmpty())
-    {
-        szAstFaceSub.Remove(szAstFaceSub.Length());
+//        szExpression += szAstFaceSub;
+//        szExpression += " ";
+//    }
 
-        // Avoid the length of expression beyond 80
-        iStrLength += szAstFaceSub.Length();
-        if (iStrLength >= 80)
-        {
-            szExpression += "&";
-            iStrLength = 20;
-        }
+//    if (!szAstFaceUni.IsEmpty())
+//    {
+//        szAstFaceUni.Remove(szAstFaceUni.Length());
 
-        szExpression += szAstFaceSub;
-        szExpression += " ";
-    }
+//        // Avoid the length of expression beyond 80
+//        iStrLength += szAstFaceUni.Length();
+//        if (iStrLength >= 80)
+//        {
+//            szExpression += "&";
+//            iStrLength = 20;
+//        }
 
-    if (!szAstFaceUni.IsEmpty())
-    {
-        szAstFaceUni.Remove(szAstFaceUni.Length());
+//        if (szAstFaceUni.Search(":") != -1 )
+//        {
+//            szExpression += "(";
+//            szExpression += szAstFaceUni;
+//            szExpression += ") ";
+//        }
+//        else
+//        {
+//            szExpression += szAstFaceUni;
+//        }
+//    }
 
-        // Avoid the length of expression beyond 80
-        iStrLength += szAstFaceUni.Length();
-        if (iStrLength >= 80)
-        {
-            szExpression += "&";
-            iStrLength = 20;
-        }
+//    szExpression.LeftAdjust();
+//    szExpression.RightAdjust();
 
-        if (szAstFaceUni.Search(":") != -1 )
-        {
-            szExpression += "(";
-            szExpression += szAstFaceUni;
-            szExpression += ") ";
-        }
-        else
-        {
-            szExpression += szAstFaceUni;
-        }
-    }
-
-    szExpression.LeftAdjust();
-    szExpression.RightAdjust();
-
-    return szExpression;
-}
-
-
-
+//    return szExpression;
+//}
 
 
 
