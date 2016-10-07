@@ -32,6 +32,10 @@ protected:
     Standard_Integer m_iInitCellNum;            /**< The initial number of cell */
     Standard_Integer m_iInitFaceNum;            /**< The initial number of face */
 
+    Standard_Integer m_iCellNumWidth;           /**< The string length of cell number */
+    Standard_Integer m_iMatWidth;               /**< The string length of material number and density */
+    Standard_Integer m_iCellMatWidth;           /**< The string length of cell and material info */
+
 public:
     /** Print the output file, include head information, cell, void, surface, transform card */
     virtual void PrintFile()const=0;                 /**< Print the file */
