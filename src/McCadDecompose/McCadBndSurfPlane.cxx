@@ -57,7 +57,7 @@ Standard_Boolean McCadBndSurfPlane::TriangleCollision(McCadTriangle *& triangle,
     for (Standard_Integer i = 1; i <= pnt_list->Length(); i++)
     {
         gp_Pnt point = pnt_list->Value(i);
-        if (IsPntOnSurf(point,1.0e-4)) // if the point is on the surface, do not calculate position
+        if (IsPntOnSurf(point,1.0e-2)) // if the point is on the surface, do not calculate position
         {
             continue;
         }
@@ -65,11 +65,11 @@ Standard_Boolean McCadBndSurfPlane::TriangleCollision(McCadTriangle *& triangle,
         /* Distinguish which side does the point located.*/
         Standard_Real aVal = McCadEvaluator::Evaluate(m_AdpSurface, point);
 
-        if (aVal > 1.0e-4)              // Point located on the positive side of face
+        if (aVal > 1.0e-3)              // Point located on the positive side of face
         {
             iPosPnt ++;
         }
-        else if (aVal < -1.0e-4)        // Point located on the negative side of face
+        else if (aVal < -1.0e-3)        // Point located on the negative side of face
         {
             iNegPnt ++;
         }
