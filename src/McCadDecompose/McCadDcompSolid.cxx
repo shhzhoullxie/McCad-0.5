@@ -146,14 +146,6 @@ Standard_Boolean McCadDcompSolid::Decompose(vector<McCadDcompSolid *> *& pDcompS
     iLevel++;
     Standard_Integer iRecLevel = iLevel;
 
-//    if(iLevel == 5 && iSolid == 2)
-//    {
-//       STEPControl_Writer wrt;
-//       wrt.Transfer(*this, STEPControl_AsIs);
-//       wrt.Write("errorSolid.stp");
-//       exit(1);
-//    }
-
     GenSurfaceList();                   /// Generate the boundary surface list
     JudgeDecomposeSurface();            /// Judge which surfaces are decompose surfaces
 
@@ -474,7 +466,7 @@ void McCadDcompSolid::JudgeDecomposeSurface()
 
 
 /** ***************************************************************************
-* @brief  Judge how many concave edges each face of solid go through
+* @brief  Judge how many concave edges each boundary face of solid go through
 * @param
 * @return void
 *
@@ -519,7 +511,7 @@ void McCadDcompSolid::JudgeThroughConcaveEdges( vector<McCadBndSurface*> & theFa
 
 
 /** ***************************************************************************
-* @brief  Judge how many concave edges each face of solid go through
+* @brief  Judge how many concave edges each assisted face of solid go through
 * @param
 * @return void
 *
@@ -944,6 +936,59 @@ void McCadDcompSolid::GenEdges(McCadBndSurface *& pBndSurf)
     }
 }
 
+
+
+/** ***************************************************************************
+* @brief  Check the boudary surfaces of solid, if the solid has spline surfaces,
+*         it can not be processed. And if it has torus, the current version
+*         doesn't support the torus.
+* @param
+* @return Standard_Boolean
+*
+* @date 17/10/2016
+* @modify 17/10/2016
+* @author  Lei Lu
+******************************************************************************/
+Standard_Boolean McCadDcompSolid::CheckBndSurfaces()
+{
+    Standard_Boolean bHasSplineSurface = Standard_False;
+    Standard_Boolean bHasTorus = Standard_False;
+
+    TopExp_Explorer exF;            // Trace the face of input solid
+
+    /** Find the faces with small areas, they will not be added into face list */
+    for (exF.Init(m_Solid,TopAbs_FACE); exF.More(); exF.Next())
+    {
+        TopoDS_Face face = TopoDS::Face(exF.Current());
+
+        TopLoc_Location loc;
+        Handle(Geom_Surface) geom_surface = BRep_Tool::Surface(face, loc);
+        GeomAdaptor_Surface surf_adoptor(geom_surface);
+
+        if(surf_adoptor.GetType() == GeomAbs_Torus)
+        {
+           bHasTorus = Standard_True;
+           break;
+        }
+
+        if(surf_adoptor.GetType() == GeomAbs_BSplineSurface)
+        {
+           bHasTorus = Standard_True;
+           break;
+        }
+    }
+
+    if(bHasSplineSurface || bHasTorus)
+    {
+        cout<<"#Error__The solid has disqulified boundary surfaces, such as spline surfaces"<<endl;
+        cout<<"#Error__And the torus are not supported in current version"<<endl;
+        return Standard_False;
+    }
+    else
+    {
+        return Standard_True;
+    }
+}
 
 
 

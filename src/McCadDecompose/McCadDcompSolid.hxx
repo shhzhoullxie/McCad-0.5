@@ -46,6 +46,9 @@ public:
                                vector<McCadDcompSolid*> *& pErrorSolidList,
                                Standard_Integer & iLevel, int iSolid);
 
+    /**< Check the boundry surfacs. if it contains splines and tours */
+    Standard_Boolean CheckBndSurfaces();
+
 private:
 
     /**< Delete the allocated surface lists */
@@ -74,9 +77,11 @@ private:
     /**< Load the boolean operation, decompose the solid with splitting surfaces */
     Standard_Boolean SplitSolid(McCadSurface *& pSplitSurf,
                     Handle_TopTools_HSequenceOfShape &solid_list);
-    /**< Judge each face through how many concave edges */
+    /**< Judge each boundary face through how many concave edges */
     void JudgeThroughConcaveEdges(vector<McCadBndSurface*> & theFaceList);
+    /**< Judge each assisted face through how many concave edges */
     void JudgeThroughConcaveEdges(vector<McCadAstSurface*> & theFaceList);
+
 private:
 
     TopoDS_Solid m_Solid;                                   /**< TopoDS solid */

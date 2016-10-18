@@ -129,6 +129,11 @@ void McCadDecompose::Decompose()
 
         McCadDcompSolid *pMcCadSolid = new McCadDcompSolid(theSolid);
 
+        if(!pMcCadSolid->CheckBndSurfaces())
+        {
+           continue;
+        }
+
         pMcCadSolid->SetDeflection(deflection);                 // Set the deflection
 
         vector<McCadDcompSolid* > *pOutputSolidList = new vector<McCadDcompSolid*>();// The output solid list */
