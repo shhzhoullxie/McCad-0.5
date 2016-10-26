@@ -1,5 +1,6 @@
 # Ignore the file folder
-lib/*.so
+lib/*
+!lib/.gitkeep
 Debug/
 
 # Ignore the built files
