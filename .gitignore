@@ -1,0 +1,7 @@
+# Ignore the file folder
+Debug/
+lib/
+
+# Ignore the built files
+CMakerLists.txt.user
+/bin/McCadApp
