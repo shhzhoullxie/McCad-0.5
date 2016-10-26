@@ -50,15 +50,15 @@ void McCadAddAstSurface::AddAstSurf(const McCadExtBndFace *& pFace,
         || pFace->GetFaceType() == GeomAbs_Cone
         || pFace->GetFaceType() == GeomAbs_Sphere)
     {
-        return GenericAstFace(seqResultant,pFace);
+        GenericAstFace(seqResultant,pFace);
     }
     else if( pFace->GetFaceType() == GeomAbs_Torus)
     {
-        return GenAstFaceOfTorus(seqResultant,pFace);
+        GenAstFaceOfTorus(seqResultant,pFace);
     }
     else if( pFace->GetFaceType() == GeomAbs_SurfaceOfRevolution)
     {
-        return GenAstFaceOfRevolution(seqResultant,pFace);
+        GenAstFaceOfRevolution(seqResultant,pFace);
     }
     else
     {
