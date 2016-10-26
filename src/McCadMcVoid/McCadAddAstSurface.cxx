@@ -43,8 +43,8 @@ McCadAddAstSurface::~McCadAddAstSurface()
 * @date 10/08/2016
 * @author  Lei Lu
 ************************************************************************/
-Standard_Boolean McCadAddAstSurface::AddAstSurf(const McCadExtBndFace *& pFace,
-                                                Handle_TopTools_HSequenceOfShape &seqResultant)
+void McCadAddAstSurface::AddAstSurf(const McCadExtBndFace *& pFace,
+                                    Handle_TopTools_HSequenceOfShape &seqResultant)
 {
     if( pFace->GetFaceType() == GeomAbs_Cylinder
         || pFace->GetFaceType() == GeomAbs_Cone
@@ -74,17 +74,17 @@ Standard_Boolean McCadAddAstSurface::AddAstSurf(const McCadExtBndFace *& pFace,
 *
 * @param McCadExtBndFace *& pFace
 *        Handle_TopTools_HSequenceOfShape &seqResultant
-* @return Standard_Boolean
+* @return void
 *
 * @date 10/08/2016
 * @author  Lei Lu
 ************************************************************************/
-Standard_Boolean McCadAddAstSurface::GenericAstFace(Handle_TopTools_HSequenceOfShape & seqResultant,
+void McCadAddAstSurface::GenericAstFace(Handle_TopTools_HSequenceOfShape & seqResultant,
                                                     const McCadExtBndFace *&pFace )
 {
     if (pFace->GetOrientation() == TopAbs_FORWARD) /// Convex surface does not need add assisted surface
     {
-       return Standard_False;
+       return;
     }
 
     TopLoc_Location loc;
@@ -104,12 +104,12 @@ Standard_Boolean McCadAddAstSurface::GenericAstFace(Handle_TopTools_HSequenceOfS
 
     if ( fabs(UMax - UMin)<= gp::Resolution() || fabs(VMax - VMin)<= gp::Resolution())
     {
-        return Standard_False;
+        return;
     }
 
     if( adpFace.IsUClosed() )
     {
-       return Standard_False;
+       return;
     }
 
     /// get extremal points in the surfaces coord sys.
@@ -180,9 +180,7 @@ Standard_Boolean McCadAddAstSurface::GenericAstFace(Handle_TopTools_HSequenceOfS
     }
 
     face.Orientation(ori_plane);
-    seqResultant->Append(face);
-
-    return Standard_True;
+    seqResultant->Append(face);    
 }
 
 
@@ -196,12 +194,12 @@ Standard_Boolean McCadAddAstSurface::GenericAstFace(Handle_TopTools_HSequenceOfS
 *
 * @param McCadExtBndFace *& pFace
 *        Handle_TopTools_HSequenceOfShape &seqResultant
-* @return Standard_Boolean
+* @return void
 *
 * @date 10/08/2016
 * @author  Lei Lu
 ************************************************************************/
-Standard_Boolean McCadAddAstSurface::GenAstFaceOfTorus(Handle_TopTools_HSequenceOfShape &seqResultant,
+void McCadAddAstSurface::GenAstFaceOfTorus(Handle_TopTools_HSequenceOfShape &seqResultant,
                                                        const McCadExtBndFace *&pFace)
 {
     TopLoc_Location loc;
@@ -215,7 +213,7 @@ Standard_Boolean McCadAddAstSurface::GenAstFaceOfTorus(Handle_TopTools_HSequence
 
     if ( fabs(UMax - UMin)<= gp::Resolution() || fabs(VMax - VMin)<= gp::Resolution())
     {
-        return Standard_False;
+        return;
     }
 
     McCadMathTool::ZeroValue(UMin,1.e-10);
@@ -335,14 +333,14 @@ Standard_Boolean McCadAddAstSurface::GenAstFaceOfTorus(Handle_TopTools_HSequence
             Standard_Real radiusnew;
             radiusnew = sqrt(PB.X()*PB.X()+PB.Y()*PB.Y());
 
-            if(orientVal < 0.0)
-            {
-                radiusnew += 1;
-            }
-            else if (orientVal > 0.0 )
-            {
-                radiusnew -= 1;
-            }
+//            if(orientVal < 0.0)
+//            {
+//                radiusnew += 1;
+//            }
+//            else if (orientVal > 0.0 )
+//            {
+//                radiusnew -= 1;
+//            }
 
             cone.SetSemiAngle(semiAngle);
             cone.SetPosition(axis);
@@ -370,11 +368,11 @@ Standard_Boolean McCadAddAstSurface::GenAstFaceOfTorus(Handle_TopTools_HSequence
 
     if(seqResultant->IsEmpty())
     {
-        return Standard_True;
+        return Standard_False;
     }
     else
     {
-        return Standard_False;
+        return Standard_True;
     }
 }
 
@@ -392,12 +390,12 @@ Standard_Boolean McCadAddAstSurface::GenAstFaceOfTorus(Handle_TopTools_HSequence
 *
 * @param McCadExtBndFace *& pFace
 *        Handle_TopTools_HSequenceOfShape &seqResultant
-* @return Standard_Boolean
+* @return void
 *
 * @date 10/08/2016
 * @author  Lei Lu
 ************************************************************************/
-Standard_Boolean McCadAddAstSurface::GenAstFaceOfRevolution( Handle_TopTools_HSequenceOfShape & seqResultant,
+void McCadAddAstSurface::GenAstFaceOfRevolution( Handle_TopTools_HSequenceOfShape & seqResultant,
                                                              const McCadExtBndFace *& pFace)
 {
     TopLoc_Location loc;
@@ -446,8 +444,7 @@ Standard_Boolean McCadAddAstSurface::GenAstFaceOfRevolution( Handle_TopTools_HSe
         TopoDS_Face face = BRepBuilderAPI_MakeFace(plane->Pln());
 
         gp_Pnt pnt_mid = (HndGeomFace->Value(UMin+(UMax-UMin)/2.0,VMin+(VMax-VMin)/2.0)).Transformed(T);
-        orientVal = McCadEvaluator::Evaluate(plane->Pln(),pnt_mid);
-        return Standard_False;
+        orientVal = McCadEvaluator::Evaluate(plane->Pln(),pnt_mid);       
 
         TopAbs_Orientation ori_new;
 
@@ -571,14 +568,14 @@ Standard_Boolean McCadAddAstSurface::GenAstFaceOfRevolution( Handle_TopTools_HSe
             gp_Cone cone;
 
             /// Move the assisted cone a little bit far from the cornor of tori.
-            if(orientVal == -1)
-            {
-                newRadius += 1;
-            }
-            else
-            {
-                newRadius -= 1;
-            }
+//            if(orientVal == -1)
+//            {
+//                newRadius += 1;
+//            }
+//            else
+//            {
+//                newRadius -= 1;
+//            }
 
             cone.SetSemiAngle(semiAngle);
             cone.SetPosition(axis);
@@ -600,15 +597,6 @@ Standard_Boolean McCadAddAstSurface::GenAstFaceOfRevolution( Handle_TopTools_HSe
             face.Orientation(ori_new); // this orientation will be used !!!
             seqResultant->Append(face);
         }
-    }
-
-    if(seqResultant->IsEmpty())
-    {
-        return Standard_True;
-    }
-    else
-    {
-        return Standard_False;
-    }
+    }    
 }
 

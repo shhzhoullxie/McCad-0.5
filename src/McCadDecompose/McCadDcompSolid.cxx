@@ -55,6 +55,7 @@
 #include "McCadAstSurfPlane.hxx"
 #include "McCadSplitCylinders.hxx"
 #include "McCadSplitCylnPln.hxx"
+#include "McCadBndSurfCone.hxx"
 
 #include "McCadEdgeLine.hxx"
 #include "McCadEdgeCircle.hxx"
@@ -358,6 +359,14 @@ McCadBndSurface* McCadDcompSolid::GenSurface(TopoDS_Face face,Standard_Integer i
 
             assert(pBndPlnSurf);
             return pBndPlnSurf;
+        }
+        else if (AdpSurf.GetType() == GeomAbs_Cone)
+        {
+            McCadBndSurfCone *pBndConeSurf = new McCadBndSurfCone(face);     // Generate the plane bundary object
+            pBndConeSurf->GenExtCone(m_fBoxSqLength);
+
+            assert(pBndConeSurf);
+            return pBndConeSurf;
         }
     } 
 }

@@ -28,20 +28,20 @@ public:
     ~McCadAddAstSurface();
 
     /**< Import a curved surface, and generate its assisted surface list*/
-    Standard_EXPORT static Standard_Boolean AddAstSurf(const McCadExtBndFace *&pFace,
-                                                       Handle_TopTools_HSequenceOfShape &seqResultant);
+    Standard_EXPORT static void AddAstSurf(const McCadExtBndFace *&pFace,
+                                           Handle_TopTools_HSequenceOfShape &seqResultant);
 
 private:
 
     /**< Generate the assisted surfaces of a revolution surface */
-    static Standard_Boolean GenAstFaceOfRevolution( Handle_TopTools_HSequenceOfShape &seqResultant,
-                                                    const McCadExtBndFace *&pFace);
+    static void GenAstFaceOfRevolution( Handle_TopTools_HSequenceOfShape &seqResultant,
+                                        const McCadExtBndFace *&pFace);
     /**< Generate the assisted surfaces of a tori */
-    static Standard_Boolean GenAstFaceOfTorus(  Handle_TopTools_HSequenceOfShape &seqResultant,
-                                                const McCadExtBndFace *& pFace);
+    static void GenAstFaceOfTorus(  Handle_TopTools_HSequenceOfShape &seqResultant,
+                                    const McCadExtBndFace *& pFace);
     /**< Generate the assisted surfaces of a cylinder or cone or sphere */
-    static Standard_Boolean GenericAstFace(Handle_TopTools_HSequenceOfShape & seqResultant,
-                                           const McCadExtBndFace *&pFace);
+    static void GenericAstFace(Handle_TopTools_HSequenceOfShape & seqResultant,
+                               const McCadExtBndFace *&pFace);
 
 };
 

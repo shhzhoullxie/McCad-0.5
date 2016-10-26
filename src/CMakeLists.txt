@@ -269,7 +269,8 @@ ADD_LIBRARY (TKMcCadDecompose	${McSrc}/McCadDecompose/McCadDecompose.cxx
                                 ${McSrc}/McCadDecompose/McCadAstSurface.cxx
                                 ${McSrc}/McCadDecompose/McCadSelSplitSurf.cxx
                                 ${McSrc}/McCadDecompose/McCadRepair.cxx
-                                ${McSrc}/McCadDecompose/McCadDcompGeomData.cxx)
+                                ${McSrc}/McCadDecompose/McCadDcompGeomData.cxx
+                                ${McSrc}/McCadDecompose/McCadBndSurfCone.cxx)
 
 ADD_LIBRARY (TKMcCadTool	${McSrc}/McCadTool/McCadTool_Task.cxx
                                 ${McSrc}/McCadTool/McCadTool_TaskMaster.cxx

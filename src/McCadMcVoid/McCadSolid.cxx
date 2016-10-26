@@ -3,7 +3,7 @@
 
 McCadSolid::McCadSolid()
 {
-    m_id = 0;
+    m_matID = 0;
     m_density = 0;
 }
 
@@ -53,9 +53,9 @@ vector<McCadConvexSolid *> McCadSolid::GetConvexSolidList()
 * @date 05/11/2013
 * @author  Lei Lu
 ***********************************************************************/
-void McCadSolid::SetMaterial(int theID, double theDensity)
+void McCadSolid::SetMaterial(int theMatID, double theDensity)
 {
-    m_id = theID;
+    m_matID = theMatID;
     m_density = theDensity;
 }
 
@@ -79,7 +79,7 @@ void McCadSolid::SetName(TCollection_AsciiString theMatName)
 
 
 /** ********************************************************************
-* @brief Get the id of solid
+* @brief Get the material ID of solid
 *
 * @param
 * @return Standard_Integer
@@ -87,9 +87,9 @@ void McCadSolid::SetName(TCollection_AsciiString theMatName)
 * @date 05/11/2013
 * @author  Lei Lu
 ***********************************************************************/
-Standard_Integer McCadSolid::GetID()
+Standard_Integer McCadSolid::GetMatID()
 {
-    return m_id;
+    return m_matID;
 }
 
 

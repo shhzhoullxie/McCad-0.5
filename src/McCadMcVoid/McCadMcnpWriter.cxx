@@ -83,8 +83,8 @@ void McCadMcnpWriter::PrintCellDesc(Standard_OStream& theStream)
         }        
 
         theStream.setf(ios::left);
-        theStream<<setw(m_iCellNumWidth)<<iCellNum;                   // Output the cell number.
-        theStream<<setw(4)<<pSolid->GetID();            // Output the material number.
+        theStream<<setw(m_iCellNumWidth)<<iCellNum;         // Output the cell number.
+        theStream<<setw(4)<<pSolid->GetMatID();             // Output the material number.
 
         if(!m_bHaveMaterial)
         {
@@ -405,9 +405,9 @@ void McCadMcnpWriter::PrintFile()const
         OSD_File theFile(thePath);
         theFile.Build(OSD_ReadWrite , OSD_Protection());
 
-        TCollection_AsciiString FileName = thePath.Name() + thePath.Extension();
-        const char* strName = FileName.ToCString();
-        ofstream theStream(strName);
+        //TCollection_AsciiString FileName = thePath.Name() + thePath.Extension();
+        //const char* strName = FileName.ToCString();
+        ofstream theStream(m_OutputFileName.ToCString());
 
         PrintHeadDesc(theStream);
         PrintCellDesc(theStream);// Lei Lu 26.11.2013

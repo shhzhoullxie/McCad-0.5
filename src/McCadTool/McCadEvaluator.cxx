@@ -12,7 +12,9 @@
 #include <TopoDS_Shell.hxx>
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Solid.hxx>
+
 #include <BRepClass3d_SolidClassifier.hxx>
+#include <BRepAdaptor_Surface.hxx>
 
 #include <Geom_Line.hxx>
 #include <Geom_Plane.hxx>
@@ -24,7 +26,6 @@
 
 #include <GeomAPI_ProjectPointOnSurf.hxx>
 
-
 McCadEvaluator::McCadEvaluator()
 {
 }
@@ -32,9 +33,6 @@ McCadEvaluator::McCadEvaluator()
 McCadEvaluator::~McCadEvaluator()
 {
 }
-
-
-
 
 /** ********************************************************************
 * @brief Evaluate the relative position between point and surface, if
@@ -469,4 +467,38 @@ Standard_Real McCadEvaluator::RevolutionEvaluate(const GeomAdaptor_Surface& theS
     }
 
     return dist*sgn;
+}
+
+
+/** ********************************************************************
+* @brief Calculate the distance between a point and surface.
+* @param GeomAdaptor_Surface& theSurf
+*        gp_Pnt& thePoint
+* @return Standard_Boolean
+*
+* @date 27/10/2016
+* @author  Lei Lu
+***********************************************************************/
+Standard_Real McCadEvaluator::DistPntSurf( const TopoDS_Face& theSurf,
+                                           const gp_Pnt& thePoint)
+{
+    Standard_Real dis = 0;
+
+    BRepAdaptor_Surface BS(theSurf, Standard_True);
+    Standard_Real uvTol = BS.Tolerance();
+
+    Standard_Real fu = BS.FirstUParameter();
+    Standard_Real lu = BS.LastUParameter();
+    Standard_Real fv = BS.FirstVParameter();
+    Standard_Real lv = BS.LastVParameter();
+
+    Extrema_ExtPS extPS(thePoint,BS,fu,lu,fv,lv,uvTol,uvTol);
+    if(extPS.IsDone() && extPS.NbExt() != 0)
+    {
+        gp_Pnt pnt  = thePoint;
+        gp_Pnt pntSurf = extPS.Point(1).Value(); // The nearest point on the surface
+        // Calculate the distance between surface and point
+        dis = Sqrt(pow(pnt.X()-pntSurf.X(),2)+pow(pntSurf.Y()-pnt.Y(),2)+pow(pnt.Z()-pntSurf.Z(),2));
+    }
+    return dis;
 }

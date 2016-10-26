@@ -249,8 +249,14 @@ void McCadConvexSolid::JudgeAssistFaces(vector<McCadExtAstFace*> & theAstFaceLis
         //Standard_Real aVal = 1.0
         for (Standard_Integer j = 1; j <= m_EdgePntList->Length(); j++)
         {
+            gp_Pnt point = m_EdgePntList->Value(j);
+            if (McCadEvaluator::DistPntSurf(*pExtAstFace,point) <= 1.0e-2)
+            {
+                continue;
+            }
+
             /* Distinguish which side does the point located.*/
-            Standard_Real aVal = McCadEvaluator::Evaluate(pExtAstFace->GetAdpFace(), m_EdgePntList->Value(j));
+            Standard_Real aVal = McCadEvaluator::Evaluate(pExtAstFace->GetAdpFace(), point);
 
             if (aVal > 1.0e-3)              // Point located on the positive side of face
             {

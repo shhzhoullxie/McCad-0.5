@@ -11,7 +11,9 @@
 #include <gp_Cylinder.hxx>
 #include <gp_Sphere.hxx>
 #include <gp_Torus.hxx>
+
 #include <TColStd_Array1OfReal.hxx>
+#include <TopoDS_Face.hxx>
 
 class McCadEvaluator
 {
@@ -37,6 +39,10 @@ public:
     //! Evaluate a surface -> Get surface type and call responsible method from below
     Standard_EXPORT static Standard_Real Evaluate(const GeomAdaptor_Surface& theSurf,
                                                   const gp_Pnt& thePoint);
+
+    /**< The shortest distance between a point and surface */
+    Standard_EXPORT static  Standard_Real DistPntSurf( const TopoDS_Face& theSurf,
+                                                       const gp_Pnt& thePoint);
 
     /**< Evaluate the relative position between point and plane */
     Standard_EXPORT static  Standard_Real Evaluate(const gp_Pln& Pl,const gp_Pnt& thePoint);

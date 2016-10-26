@@ -184,11 +184,10 @@ vector<McCadExtAstFace *> McCadExtBndFace::GetAstFaces()
     if (m_AstFaceList.empty())
     {
         Handle_TopTools_HSequenceOfShape AstFaceList = new TopTools_HSequenceOfShape();
-       // if ( (!McCadCSGTool::AddAuxSurf(*this,AstFaceList))
-       //         || (AstFaceList->Length() == 0))      // Calculate the auxiliary faces
         const McCadExtBndFace *pFace = this;
-        if ((McCadAddAstSurface::AddAstSurf(pFace,AstFaceList))
-                 && (AstFaceList->Length() != 0))      // Calculate the auxiliary faces
+
+        McCadAddAstSurface::AddAstSurf(pFace,AstFaceList);
+        if (!AstFaceList->IsEmpty())      // Calculate the auxiliary faces
         {
             for (int i = 1; i <= AstFaceList->Length(); i++)
             {
