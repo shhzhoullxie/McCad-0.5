@@ -1,5 +1,5 @@
 # Ignore the file folder
-lib/*.*
+lib/*.so
 Debug/
 
 # Ignore the built files
