@@ -490,7 +490,7 @@ void McCadAddAstSurface::GenAstFaceOfRevolution( Handle_TopTools_HSequenceOfShap
 
         gp_Vec vecC;
         gp_Pnt newCenter;
-        Standard_Real newRadius;
+        Standard_Real newRadius = 0;
 
         if(axis.IsCoplanar(Ax3_Z,dis_tol,angle_tol))
         {
