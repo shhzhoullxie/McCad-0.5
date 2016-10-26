@@ -1,0 +1,82 @@
+GEOMETRY
+TITLE title (McCad 0.4.0 generated Input)
+/*
+   * ============================================================================= *
+     * Material cells  ---- 2
+     * Void cells  -------- 8
+     * Surfaces    -------- 16
+     * Outer Void  -------- 1
+   * ============================================================================= *
+*/
+
+/* ============================ Surface Data Definitions ========================= */
+
+SURF 1     PLANEX    -16.1000000 
+SURF 2     PLANEX     -6.0901211 
+SURF 3     PLANEX     -0.3000000 
+SURF 4     PLANEX      5.5051929 
+SURF 5     PLANEX     15.6000000 
+SURF 6     PLANEY    -11.3000000 
+SURF 7     PLANEY     -1.2689873 
+SURF 8     PLANEY      0.5000000 
+SURF 9     PLANEY      2.1607086 
+SURF 10    PLANEY     12.3000000 
+SURF 11    PLANEZ    -10.0000000 
+SURF 12    PLANEZ      0.0000000 
+SURF 13    PLANEZ      2.0000000 
+SURF 14    PLANEZ      4.0000000 
+SURF 15    PLANEZ     14.0000000 
+SURF 16    CYLZ     -4.4097393       1.1708609       0.9678852 
+
+/* ============================= Volume Data Definitions ========================= */
+VOLU  1       EQUA PLUS 1 13 MINUS 2 14 16 ENDV
+VOLU  2       EQUA PLUS 3 12 7 2 MINUS 3 9 4 13 ENDV
+/*
+      o=======================================================================o
+      |                                                                       |
+      |     * Void spaces:  8 Cells                                           |
+      |                                                                       |
+      o=======================================================================o
+*/
+VOLU  10001   EQUA PLUS 3 12 7 2 FICTIVE ENDV
+VOLU  3       EQUA PLUS 3 1 6 11 MINUS 3 3 8 13
+              VMINUS 1 10001
+              ENDV
+
+VOLU  10002   EQUA MINUS 2 14 16 FICTIVE ENDV
+VOLU  4       EQUA PLUS 3 1 6 13 MINUS 3 3 8 15
+              VMINUS 1 10002
+              ENDV
+
+VOLU  10003   EQUA PLUS 2 12 2 MINUS 1 9 FICTIVE ENDV
+VOLU  5       EQUA PLUS 3 1 8 11 MINUS 3 3 10 13
+              VMINUS 1 10003
+              ENDV
+
+VOLU  10004   EQUA MINUS 2 14 16 FICTIVE ENDV
+VOLU  6       EQUA PLUS 3 1 8 13 MINUS 3 3 10 15
+              VMINUS 1 10004
+              ENDV
+
+VOLU  10005   EQUA PLUS 2 12 7 MINUS 1 4 FICTIVE ENDV
+VOLU  7       EQUA PLUS 3 3 6 11 MINUS 3 5 8 13
+              VMINUS 1 10005
+              ENDV
+
+VOLU  8       EQUA PLUS 3 3 6 13 MINUS 3 5 8 15 ENDV
+VOLU  10006   EQUA PLUS 1 12 MINUS 2 9 4 FICTIVE ENDV
+VOLU  9       EQUA PLUS 3 3 8 11 MINUS 3 5 10 13
+              VMINUS 1 10006
+              ENDV
+
+VOLU  10      EQUA PLUS 3 3 8 13 MINUS 3 5 10 15 ENDV
+VOLU  10007   EQUA MINUS 1 1 FICTIVE ENDV
+VOLU  10008   EQUA PLUS 1 5 FICTIVE ENDV
+VOLU  10009   EQUA MINUS 1 6 FICTIVE ENDV
+VOLU  10010   EQUA PLUS 1 10 FICTIVE ENDV
+VOLU  10011   EQUA MINUS 1 11 FICTIVE ENDV
+VOLU  10012   EQUA PLUS 1 15
+              UNION 5 10007 10008 10009 10010 10011
+              ENDV
+ENDGEOM
+
