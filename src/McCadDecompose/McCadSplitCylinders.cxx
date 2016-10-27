@@ -73,8 +73,8 @@ Standard_Boolean McCadSplitCylinders::HasComLineEdge(McCadBndSurfCylinder *& pSu
 
             if (pEdgeA->IsSame(pEdgeB,1.0e-5))
             {
-                pEdgeA->SetConvexity(0);    /// Set the convexities of edgeA and edgeB
-                pEdgeB->SetConvexity(0);
+                pEdgeA->SetConvexity(flat);    /// Set the convexities of edgeA and edgeB
+                pEdgeB->SetConvexity(flat);
 
                 pEdgeList->push_back(pEdgeA);
             }
@@ -127,8 +127,8 @@ Standard_Boolean McCadSplitCylinders::HasComCurvEdge(McCadBndSurfCylinder *&pSur
 
             if (pEdgeA->IsSame(pEdgeB,1.0e-5))
             {
-                pEdgeA->SetConvexity(0);  // Set the convexity of two edges
-                pEdgeB->SetConvexity(0);
+                pEdgeA->SetConvexity(flat);  // Set the convexity of two edges
+                pEdgeB->SetConvexity(flat);
                 pEdge = pEdgeA;
                 return Standard_True;
             }

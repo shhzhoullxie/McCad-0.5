@@ -33,5 +33,5 @@ VoidGenerate 1
 #MDFile       /home/user/Testarea/MaterialList/MDList.txt   ... Material and Density information - MCNP only
 #
 # directories that contain the converted*.stp files
-/work/Programming/McCadTrunk2/bin
+/work/Programming/McCadTrunk5/McCad-0.5/bin
 

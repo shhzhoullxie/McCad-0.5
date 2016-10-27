@@ -4,15 +4,10 @@
 #include <TopoDS_Solid.hxx>
 #include <Handle_TopTools_HSequenceOfShape.hxx>
 #include "McCadSurface.hxx"
-
+#include "McCadDcompGeomData.hxx"
 #include "McCadBndSurface.hxx"
 #include "McCadAstSurfPlane.hxx"
-
 #include "McCadSelSplitSurf.hxx"
-
-#include <STEPControl_Writer.hxx>
-
-#include "McCadDcompGeomData.hxx"
 
 class McCadDcompSolid : public TopoDS_Solid
 {
@@ -89,6 +84,7 @@ private:
     vector<McCadBndSurface*> m_FaceList;                    /**< The bundary face list of solid */
     vector<McCadBndSurface*> m_PlaneList;                   /**< The bundary planes of solid */
     vector<McCadBndSurface*> m_CylinderList;                /**< The bundary cylinders of solid */
+    vector<McCadBndSurface*> m_ConeList;                    /**< The bundary cones of solid */
     vector<McCadSurface*> m_SplitFaceList;                  /**< The splitting face list */
 
     vector<McCadAstSurface*> m_AstFaceList;                 /**< The assisted splitting surface list */

@@ -292,6 +292,11 @@ void McCadDcompSolid::GenSurfaceList()
             {
                 m_CylinderList.push_back(pBndSurf);
             }
+            else if(pBndSurf->GetSurfType() == Cone)    // If the boundary surface is cone
+            {
+                m_ConeList.push_back(pBndSurf);
+            }
+
         }
         else
         {
@@ -301,10 +306,12 @@ void McCadDcompSolid::GenSurfaceList()
 
     MergeSurfaces(m_PlaneList);     ///<  Merge the planes which have same geometries and common edges
     MergeSurfaces(m_CylinderList);  ///<  Merge the curved surfaces with same geometries in the solid
+    MergeSurfaces(m_ConeList);      ///<  Merge the curved surfaces with same geometries in the solid
 
     /** Add the cylinders and planes into face list */
     m_FaceList.insert(m_FaceList.end(),m_PlaneList.begin(),m_PlaneList.end());
     m_FaceList.insert(m_FaceList.end(),m_CylinderList.begin(),m_CylinderList.end());
+    m_FaceList.insert(m_FaceList.end(),m_ConeList.begin(),m_ConeList.end());
 }
 
 
@@ -829,12 +836,18 @@ void McCadDcompSolid::CalEdgeConvexity()
         TopoDS_Face FaceB = TopoDS::Face(iterFace.Value());
 
         /// Get the first vertex of edge
-        TopoDS_Vertex vtxStart = TopExp::FirstVertex(edge,0);
-        gp_Pnt pntStart = BRep_Tool::Pnt(vtxStart);
-        TopoDS_Vertex vtxEnd = TopExp::LastVertex(edge,0);
-        gp_Pnt pntEnd = BRep_Tool::Pnt(vtxEnd);
+//        TopoDS_Vertex vtxStart = TopExp::FirstVertex(edge,0);
+//        gp_Pnt pntStart = BRep_Tool::Pnt(vtxStart);
+//        TopoDS_Vertex vtxEnd = TopExp::LastVertex(edge,0);
+//        gp_Pnt pntEnd = BRep_Tool::Pnt(vtxEnd);
 
-        gp_Vec vec(pntStart,pntEnd);
+        Standard_Real fStart, fEnd;
+        Handle(Geom_Curve) theCurve = BRep_Tool::Curve(edge, fStart, fEnd);
+
+        gp_Pnt pntStart;
+        gp_Vec vec;
+        theCurve->D0(fStart,pntStart);
+        theCurve->D1(fStart,pntStart,vec);
         gp_Dir dir(vec);
 
         /// Get the normals of each surface
@@ -844,8 +857,8 @@ void McCadDcompSolid::CalEdgeConvexity()
         BRepAdaptor_Curve baCrv;
         baCrv.Initialize(edge);
 
-        Standard_Real fStartB, fEndB;
-        Handle(Geom_Curve) theCurve = BRep_Tool::Curve(edge, fStartB, fEndB);
+       // Standard_Real fStartB, fEndB;
+       // Handle(Geom_Curve) theCurve = BRep_Tool::Curve(edge, fStartB, fEndB);
 
         Standard_Real angle = normalA.AngleWithRef(normalB,dir);
 
@@ -855,14 +868,14 @@ void McCadDcompSolid::CalEdgeConvexity()
         }
 
         /** The edge is concave */
-        if( angle > 0 && edge.Orientation() == TopAbs_REVERSED)
+        if( angle < 0 && edge.Orientation() == TopAbs_REVERSED)
         {
-            //wrt.Transfer(edge, STEPControl_AsIs);
+            //wrt.Transfer(edge, STEPControl_AsIs);            
             edge.Convex(1);
         }
-        else if(edge.Orientation() == TopAbs_FORWARD && angle < 0)
+        else if(edge.Orientation() == TopAbs_FORWARD && angle > 0)
         {
-            //wrt.Transfer(edge, STEPControl_AsIs);
+            //wrt.Transfer(edge, STEPControl_AsIs);           
             edge.Convex(1);
         }
     }
@@ -886,14 +899,10 @@ void McCadDcompSolid::GenEdges(McCadBndSurface *& pBndSurf)
         TopoDS_Edge edge = TopoDS::Edge(ex.Current());
         McCadEdge *pEdge = NULL;
 
-        Standard_Real fStart, fEnd;
-        Handle(Geom_Curve) theCurve = BRep_Tool::Curve(edge, fStart, fEnd);
+        BRepAdaptor_Curve adaptorCurve;
+        adaptorCurve.Initialize(edge);
 
-        gp_Pnt pntStart, pntEnd;
-        theCurve->D0(fStart, pntStart);
-        theCurve->D0(fEnd, pntEnd);
-
-        switch (GeomAdaptor_Curve(theCurve).GetType())
+        switch (adaptorCurve.GetType())
         {
             case GeomAbs_Line:
             {
@@ -918,7 +927,7 @@ void McCadDcompSolid::GenEdges(McCadBndSurface *& pBndSurf)
         /** Set the convexity of edge */
         if(edge.Convex())
         {
-            pEdge->SetConvexity(-1);
+            pEdge->SetConvexity(concave);
         }
 
         /** Set the edge can be used for adding assisted splitting surfaces */
@@ -934,11 +943,6 @@ void McCadDcompSolid::GenEdges(McCadBndSurface *& pBndSurf)
                 // The edge can be used for adding assisted splitting surface
                 pEdge->AddAstSplitSurf(Standard_True);
             }
-//            else
-//            {
-//                cout<<"UMin  "<<UMin<<"   UMin1   "<<UMin1<<"  "<<Abs(UMin - UMin1)<<endl;
-//                cout<<"UMax  "<<UMax<<"   UMax1   "<<UMax1<<"  "<<Abs(UMax-UMax1)<<endl;
-//            }
         }
 
         pBndSurf->AddEdge(pEdge); // Add the edge into edge list of the surface

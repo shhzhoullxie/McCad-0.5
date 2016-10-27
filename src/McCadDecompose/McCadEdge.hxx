@@ -15,6 +15,8 @@ enum CURVE{
     Spline = 4
 };
 
+enum CONVEXITY{concave = -1, flat = 1, convex = 1};
+
 class McCadEdge : public TopoDS_Edge
 {
 
@@ -46,9 +48,9 @@ public:
     void AddAstSplitSurf(Standard_Boolean bSplit);     /**< Set the edge is the one can be added assisted splitting surface */
     Standard_Boolean CanAddAstSplitSurf();             /**< The edge can be used to add splitting surface */
 
-    void SetConvexity(Standard_Integer bConvexity);             /**< Set the convexity of the edge */
-    Standard_Boolean IsConcaveEdge();                           /**< The edge is concave edge or not */
-    CURVE GetType();                                            /**< Get the type of edge curve */
+    void SetConvexity(CONVEXITY bConvexity);           /**< Set the convexity of the edge */
+    Standard_Boolean IsConcaveEdge();                  /**< The edge is concave edge or not */
+    CURVE GetType();                                   /**< Get the type of edge curve */
 
     gp_Pnt StartPoint();    /**< Get the start point of edge */
     gp_Pnt EndPoint();      /**< Get the end point of edge */
@@ -65,7 +67,7 @@ protected:
     CURVE m_CurveType;                  /**< The type of curve */
     Standard_Boolean m_bCanSplit;       /**< The edge can be used for adding splitting surface or not */
     Standard_Boolean m_bIsConcave;      /**< The edge is concave edge or not */
-    Standard_Integer m_iConvexity;      /**< The convexity of edge, -1 is concave, 0 is flat, 1 is convex */
+    CONVEXITY m_iConvexity;             /**< The convexity of edge, -1 is concave, 0 is flat, 1 is convex */
     Standard_Boolean m_bCalPoints;      /**< The points of edge has been calculated or not */
 
     gp_Pnt m_pntStart;  /**< The start point */

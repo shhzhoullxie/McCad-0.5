@@ -46,6 +46,8 @@ public:
     Standard_EXPORT static TopoDS_Face FusePlanes(TopoDS_Face &faceA, TopoDS_Face &faceB);
     /**< Fuse two Torus which are connected and have same geometries */
     Standard_EXPORT static TopoDS_Face FuseTorus(TopoDS_Face &faceA, TopoDS_Face &faceB);
+    /**< Fuse two Cones which are connected and have same geometries */
+    Standard_EXPORT static TopoDS_Face FuseCones(TopoDS_Face &faceA, TopoDS_Face &faceB);
 
 
     /**< Calculate the volume of a solid */

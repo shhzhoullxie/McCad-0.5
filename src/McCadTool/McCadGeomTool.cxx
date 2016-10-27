@@ -783,6 +783,82 @@ TopoDS_Face McCadGeomTool::FuseTorus(TopoDS_Face &faceA, TopoDS_Face &faceB)
 
 
 
+/** ***************************************************************************
+* @brief  Fuse two cones with common straight edge and same geometries
+* @param  TopoDS_Face & faceA    input face A
+*         TopoDS_Face & faceB    input face B
+* @return Standard_Boolean       if there are same edge return true, vis return false
+*
+* @date 26/10/2016
+* @modify 26/10/2016
+* @author  Lei Lu
+******************************************************************************/
+TopoDS_Face McCadGeomTool::FuseCones(TopoDS_Face &faceA, TopoDS_Face &faceB)
+{
+    Standard_Real UMin1,UMax1,VMin1,VMax1;
+    BRepTools::UVBounds(faceA,UMin1,UMax1,VMin1,VMax1);
+
+    Standard_Real UMin2,UMax2,VMin2,VMax2;
+    BRepTools::UVBounds(faceB,UMin2,UMax2,VMin2,VMax2);
+
+    McCadMathTool::ZeroValue(UMin1,1.e-7);
+    McCadMathTool::ZeroValue(UMin2,1.e-7);
+    McCadMathTool::ZeroValue(UMax1,1.e-7);
+    McCadMathTool::ZeroValue(UMax2,1.e-7);
+    McCadMathTool::ZeroValue(VMin1,1.e-7);
+    McCadMathTool::ZeroValue(VMin2,1.e-7);
+    McCadMathTool::ZeroValue(VMax1,1.e-7);
+    McCadMathTool::ZeroValue(VMax2,1.e-7);
+
+    Standard_Boolean isClose = Standard_False;
+    if ( Abs(UMax1-UMin1)+Abs(UMax2-UMin2) >= 2*M_PI )
+    {
+        isClose = Standard_True;
+    }
+
+    Standard_Real UMin(0.0),UMax(0.0), VMin(0.0), VMax(0.0);
+
+    if(isClose)
+    {
+        UMin = 0;
+        UMax = 2*M_PI;
+    }
+    else
+    {
+        Standard_Real UDis1 = fmod(Abs(UMin1-UMax2),2*M_PI);
+        Standard_Real UDis2 = fmod(Abs(UMin2-UMax1),2*M_PI);
+
+        if( UDis1 < UDis2)
+        {
+            UMin = UMin2;
+            UMax = UMax1;
+        }
+        else
+        {
+            UMin = UMin1;
+            UMax = UMax2;
+        }
+    }
+
+    (VMin1 <= VMin2) ? VMin = VMin1 : VMin = VMin2;
+    (VMax1 >= VMax2) ? VMax = VMax1 : VMax = VMax2;
+
+    TopLoc_Location loc;
+    const Handle(Geom_Surface)& aS1 = BRep_Tool::Surface(faceA,loc);
+
+    TopoDS_Face face  = BRepBuilderAPI_MakeFace(aS1, UMin,UMax, VMin, VMax, 1.e-7).Face();
+
+    /// adjust orientation if neccessary - in some cases this is needed (even for fusion of planar faces)!!!
+    if(face.Orientation() != faceA.Orientation())
+    {
+        face.Orientation(faceA.Orientation());
+    }
+
+    return face;
+}
+
+
+
 
 /** ***************************************************************************
 * @brief  If the two edges are same or not

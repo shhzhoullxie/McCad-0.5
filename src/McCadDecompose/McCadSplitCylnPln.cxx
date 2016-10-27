@@ -353,8 +353,8 @@ Standard_Boolean McCadSplitCylnPln::FindComLineEdge(McCadBndSurfCylinder *& pSur
 
                 if(angle < 1.0e-4)
                 {
-                    pEdgeA->SetConvexity(0);
-                    pEdgeB->SetConvexity(0);
+                    pEdgeA->SetConvexity(flat);
+                    pEdgeB->SetConvexity(flat);
                 }          
 
                 if(angle >= 0.5*M_PI && angle <= M_PI)
