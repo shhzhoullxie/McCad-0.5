@@ -1,5 +1,7 @@
 #include "McCadBndSurfCone.hxx"
 
+#include <assert.h>
+
 #include <BRep_Tool.hxx>
 #include <BRepTools.hxx>
 #include <BRepBuilderAPI_MakeFace.hxx>
@@ -138,6 +140,8 @@ void McCadBndSurfCone::GenExtCone(Standard_Real length)
     Standard_Real UMin,UMax, VMin, VMax;
     BRepTools::UVBounds(*this,UMin,UMax, VMin, VMax);
 
+    m_Radian = Abs(UMax-UMin);   // Set the radian of cylinder
+
     gp_Cone gCone = m_AdpSurface.Cone();
 
     Standard_Real UPeak, VPeak;  // The UV values of peak of cone
@@ -262,3 +266,70 @@ Standard_Boolean McCadBndSurfCone::IsPntOnSurf(gp_Pnt &thePnt, Standard_Real dis
 
     return Standard_False;
 }
+
+
+
+/** ******************************************************************************
+* @brief
+* @param
+* @return Standard_Real
+*
+* @date 27/06/2016
+* @modify
+* @author Lei Lu
+*********************************************************************************/
+Standard_Real McCadBndSurfCone::GetRadian() const
+{
+    return m_Radian;
+}
+
+
+
+
+/** ***************************************************************************
+* @brief
+* @param  McCadEdge *& pEdge
+* @return void
+*
+* @date 02/06/2016
+* @author  Lei Lu
+******************************************************************************/
+void McCadBndSurfCone::AddConePlnSplitEdge(McCadEdge *& pEdge)
+{
+    assert(pEdge);
+    m_ConePlnSplitEdgeList.push_back(pEdge);
+}
+
+
+/** ******************************************************************************
+* @brief
+* @param
+* @return vector<McCadEdge*>
+*
+* @date 27/06/2016
+* @modify
+* @author Lei Lu
+*********************************************************************************/
+vector<McCadEdge*> McCadBndSurfCone::GetConePlnSplitEdgeList() const
+{
+    if(!m_ConePlnSplitEdgeList.empty())
+    {
+        return m_ConePlnSplitEdgeList;
+    }
+}
+
+
+/** ******************************************************************************
+* @brief Get the center of cylindr which is one point on the axis
+* @param
+* @return gp_Pnt
+*
+* @date 27/06/2016
+* @modify
+* @author Lei Lu
+*********************************************************************************/
+gp_Pnt McCadBndSurfCone::GetPeak() const
+{
+    return m_Apex;
+}
+

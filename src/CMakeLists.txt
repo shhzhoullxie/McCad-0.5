@@ -264,6 +264,7 @@ ADD_LIBRARY (TKMcCadDecompose	${McSrc}/McCadDecompose/McCadDecompose.cxx
                                 ${McSrc}/McCadDecompose/McCadEdgeSpline.cxx
                                 ${McSrc}/McCadDecompose/McCadSplitCylinders.cxx
                                 ${McSrc}/McCadDecompose/McCadSplitCylnPln.cxx
+                                ${McSrc}/McCadDecompose/McCadSplitConePln.cxx
                                 ${McSrc}/McCadDecompose/McCadSurface.cxx
                                 ${McSrc}/McCadDecompose/McCadBndSurface.cxx
                                 ${McSrc}/McCadDecompose/McCadAstSurface.cxx

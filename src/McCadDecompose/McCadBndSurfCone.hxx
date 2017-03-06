@@ -39,6 +39,13 @@ public:
     /**< The point is on the surface if the distance between them less than tolerence */
     virtual Standard_Boolean IsPntOnSurf(gp_Pnt &thePnt, Standard_Real disTol);
 
+
+    /**< Add the edge connects cone and plane for adding assited splitting surface */
+    void AddConePlnSplitEdge(McCadEdge *& pEdge);
+    vector<McCadEdge*> GetConePlnSplitEdgeList() const;     /**< Get the splitting edge list */
+    Standard_Real GetRadian() const;                        /**< Get the radian of cone */
+    gp_Pnt GetPeak() const;                                 /**< Get the peak of cone */
+
 private:
 
     gp_Dir m_Dir;                   /**< Direction of axis  */
@@ -51,6 +58,11 @@ private:
     Standard_Boolean m_bHasAstSplitSurfaces;/**< If the cylinder has assisted splitting surface */
     Bnd_Box m_ConeBndBox;                   /**< The boundary box of whole cylinder */
     TopoDS_Face m_coneSurf;                 /**< The created new cone */
+
+    /**< The list of edge that connect cylinder and plane and can be added splitting surface */
+    vector<McCadEdge*> m_ConePlnSplitEdgeList;
+    Standard_Real m_Radian;                     /**< The radian of cone */
+
 
 };
 
