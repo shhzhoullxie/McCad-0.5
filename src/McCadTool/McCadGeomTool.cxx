@@ -1024,7 +1024,7 @@ Standard_Boolean McCadGeomTool::IsSameCircleEdge(const TopoDS_Edge &edgeA,
     Standard_Real fMidB = (fStartB+fEndB)/2.0;
     theCurveA->D0(fMidB, pntMidB);
 
-    // If the middle points are not same, the two ellipses are not same
+    // If the middle points are not same, the two circles are not same
     if(!pntMidA.IsEqual(pntMidB,1.0e-5))
     {
         return Standard_False;
@@ -1033,7 +1033,7 @@ Standard_Boolean McCadGeomTool::IsSameCircleEdge(const TopoDS_Edge &edgeA,
     gp_Circ circA = gp_CurveA.Circle();
     gp_Circ circB = gp_CurveB.Circle();
 
-    // Major and Minor radius are same
+    // The radius and locations are same
     if( Abs(circA.Radius() - circB.Radius()) <= dis
             && circA.Location().IsEqual(circB.Location(),1.0e-5))
     {

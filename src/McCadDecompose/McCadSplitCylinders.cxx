@@ -120,7 +120,7 @@ Standard_Boolean McCadSplitCylinders::HasComCurvEdge(McCadBndSurfCylinder *&pSur
         for(unsigned j = 0; j < pSurfB->GetEdgeList().size(); j++)
         {
             McCadEdge *pEdgeB = pSurfB->GetEdgeList().at(j);
-            if(pEdgeA->GetType() != Ellipse)
+            if(pEdgeB->GetType() != Ellipse)
             {
                 continue;
             }
@@ -229,8 +229,8 @@ McCadAstSurfPlane * McCadSplitCylinders::GenSurfThroughTwoEdges( McCadEdgeLine *
 * @param TopoDS_Edge &edge
 * @return McCadAstSurfPlane
 *
-* @date 08/04/2016
-* @modify 08/04/2015
+* @date 08/04/2015
+* @modify 08/04/2016
 * @author  Lei Lu
 ******************************************************************************/
 McCadAstSurfPlane * McCadSplitCylinders::GenSurfThroughCurves(McCadEdge *& pEdge)
