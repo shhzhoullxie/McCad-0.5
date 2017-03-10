@@ -6,6 +6,8 @@
 #include "McCadAstSurfPlane.hxx"
 #include "McCadBndSurfCone.hxx"
 #include "McCadDcompSolid.hxx"
+#include "McCadBndSurfPlane.hxx"
+
 
 using namespace std;
 
@@ -36,24 +38,25 @@ public:
 
 private:
 
-    /**< Create splitting surfaces through the given straight edge */
-    McCadAstSurfPlane* CrtSplitSurfThroughEdge(McCadBndSurfCone *& pConeFace,McCadEdge *& pEdge);
-    /**< Create splitting surfaces through the given two straight edges */
-    McCadAstSurfPlane* CrtSplitSurfThroughTwoEdges(McCadEdge *& pEdgeA, McCadEdge *& pEdgeB);
-
-    /**< Create the splitting surfaces based on a give cone surface */
+    /**< Create the splitting surfaces based on a given cone surface */
     void CrtSplitSurfaces(McCadBndSurfCone *& pConeFace, vector<McCadAstSurface *> &astFace_list);
 
+    /**< Create splitting surfaces through the given straight edge */
+    McCadAstSurfPlane* CrtSplitSurfThroughEdge(McCadBndSurfCone *& pConeFace,
+                                               McCadEdge *& pEdge);
+    /**< Create splitting surfaces through the given two straight edges */
+    McCadAstSurfPlane* CrtSplitSurfThroughTwoEdges(McCadEdge *& pEdgeA,
+                                                   McCadEdge *& pEdgeB);
     /**< Search the common straight edge of given cone and plane  */
     Standard_Boolean FindComLineEdge(McCadBndSurfCone *& pSurfCone,
-                                     McCadBndSurface *& pSurfPln);
-
-    Standard_Real CalCurveRadian(McCadBndSurface *& pBndCone);      /**< Calculate the radian of curved surface */
-   // void MergeSurfaces(vector<McCadAstSurface*> & theAstFaceList);  /**< Merge the repeated surfaces */
+                                     McCadBndSurfPlane *& pSurfPln);
+    /**< Calculate the radian of curved surface */
+    Standard_Real CalCurveRadian(McCadBndSurface *& pBndCone);
 
 private:
-    Standard_Real m_fLength;            /**< The length of input solid which deside the size of created splitting surface */
 
+    /**< The length of input solid which deside the size of created splitting surface */
+    Standard_Real m_fLength;
 
 };
 

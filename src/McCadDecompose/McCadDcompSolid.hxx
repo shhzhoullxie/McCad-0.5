@@ -102,6 +102,8 @@ public:
     friend class McCadSplitCylnPln;
     friend class McCadSplitCylinders;
     friend class McCadSplitConePln;
+    friend class McCadSplitConeCyln;
+    friend class McCadSplitConeCone;
 
 };
 

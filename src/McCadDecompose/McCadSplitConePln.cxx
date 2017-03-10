@@ -4,8 +4,8 @@
 #include "McCadAstSurface.hxx"
 
 #include <BRepBuilderAPI_MakeFace.hxx>
-
 #include <BRepTools.hxx>
+
 #include <gp_Pln.hxx>
 
 #include "../McCadTool/McCadGeomTool.hxx"
@@ -22,16 +22,16 @@ McCadSplitConePln::~McCadSplitConePln()
 /** ***************************************************************************
 * @brief  Generate the assisted surfaces and add them to the assisted splitting
 *         surface list
-* @param  McCadBndSurface input cone face, assisted splitting face list
+* @param  input solid McCadDcompSolid *& pSolid
 * @return void
 *
 * @date 01/03/2017
-* @modify 06/03/2015
+* @modify 06/03/2017
 * @author  Lei Lu
 ******************************************************************************/
 void McCadSplitConePln::GenSplitSurfaces( McCadDcompSolid *& pSolid)
 {
-    vector<McCadBndSurface *>  &cone_list     = pSolid->m_CylinderList;
+    vector<McCadBndSurface *>  &cone_list     = pSolid->m_ConeList;
     vector<McCadBndSurface *>  &plane_list    = pSolid->m_PlaneList;
     vector<McCadAstSurface*>   &AstFaceList   = pSolid->m_AstFaceList;
 
@@ -66,7 +66,7 @@ void McCadSplitConePln::GenSplitSurfaces( McCadDcompSolid *& pSolid)
             ///< the edge and axis of cylinder as assisted splitting surface.
             for(int j = 0; j < plane_list.size(); j++ )
             {
-                McCadBndSurface *pBndPln = plane_list.at(j);
+                McCadBndSurfPlane *pBndPln = (McCadBndSurfPlane *)plane_list.at(j);
 
                 if(FindComLineEdge(pBndCone,pBndPln))
                 {
@@ -94,28 +94,23 @@ void McCadSplitConePln::GenSplitSurfaces( McCadDcompSolid *& pSolid)
             CrtSplitSurfaces(pBndCone,AstFaceList);
         }
     }
-
-    // Merge the generated assisted splitting surfaces
-    if(AstFaceList.size() >= 2)
-    {
-      //  MergeSurfaces(AstFaceList);
-    }
 }
 
 
+
 /** ***************************************************************************
-* @brief  Judge the input two surfaces have common connected edges or not
-* @param  McCadBndSurface * pSurfA,
-          McCadBndSurface * pSurfB,
+* @brief  Judge the input two surfaces have common connected straight edges
+* @param  McCadBndSurfCone * pSurfA,
+          McCadBndSurfPlane * pSurfB,
           McCadEdge *& pEdge
 * @return Standard_Boolean
 *
-* @date 13/07/2015
-* @modify 13/07/2015
+* @date 08/03/2017
+* @modify 08/03/2015
 * @author  Lei Lu
 ******************************************************************************/
 Standard_Boolean McCadSplitConePln::FindComLineEdge(McCadBndSurfCone *& pSurfCone,
-                                        McCadBndSurface *& pSurfPln)
+                                                    McCadBndSurfPlane *&pSurfPln)
 {
     /// Judge the surfaces have the common straight edge
     for(unsigned i = 0; i < pSurfCone->GetEdgeList().size(); i++)
@@ -171,14 +166,13 @@ Standard_Boolean McCadSplitConePln::FindComLineEdge(McCadBndSurfCone *& pSurfCon
 
 
 /** ***************************************************************************
-* @brief
-*
-* @param McCadBndSurfCylinder *& pCylnFace,
-         vector<McCadAstSurface*> & astFace_list  >> The generated splitting
+* @brief Create splitting surfaces of given cone
+* @param McCadBndSurfCone *& pConeFace,
+         vector<McCadAstSurface*> & astFace_list  // The generated splitting
          surface is added into this face list.
 * @return void
 *
-* @date
+* @date 08/03/2017
 * @modify
 * @author  Lei Lu
 ******************************************************************************/
@@ -222,14 +216,14 @@ void McCadSplitConePln::CrtSplitSurfaces(McCadBndSurfCone *& pConeFace,
 
 
 /** ***************************************************************************
-* @brief
+* @brief Create splitting surface through the given edge
 *
-* @param McCadBndSurfCylinder *& pCylnFace,
+* @param McCadBndSurfCone *& pConeFace,
          McCadEdge *& pEdge
-* @return McCadAstSurfPlane *     >> Generated assisted splittin surface
+* @return McCadAstSurfPlane   (Generated assisted splittin surface)
 *
-* @date 13/06/2016
-* @modify 13/06/2016
+* @date 08/03/2017
+* @modify
 * @author  Lei Lu
 ******************************************************************************/
 McCadAstSurfPlane* McCadSplitConePln::CrtSplitSurfThroughEdge(McCadBndSurfCone *& pConeFace,
@@ -263,7 +257,7 @@ McCadAstSurfPlane* McCadSplitConePln::CrtSplitSurfThroughEdge(McCadBndSurfCone *
 * @brief Generate assisted splitting surface through two edges
 *
 * @param McCadEdge *& pEdgeA, McCadEdge *& pEdgeB
-* @return McCadAstSurfPlane *     >> Generated assisted splittin surface
+* @return McCadAstSurfPlane *     (Generated assisted splittin surface)
 *
 * @date 13/06/2016
 * @modify 13/06/2016

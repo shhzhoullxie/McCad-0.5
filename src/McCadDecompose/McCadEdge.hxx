@@ -12,7 +12,9 @@ enum CURVE{
     Line = 1,
     Circle = 2,
     Ellipse = 3,
-    Spline = 4
+    Spline = 4,
+    Hyperbola = 5,
+    Parabola = 6
 };
 
 enum CONVEXITY{concave = -1, flat = 1, convex = 1};

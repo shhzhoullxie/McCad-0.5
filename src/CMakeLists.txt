@@ -262,9 +262,13 @@ ADD_LIBRARY (TKMcCadDecompose	${McSrc}/McCadDecompose/McCadDecompose.cxx
                                 ${McSrc}/McCadDecompose/McCadEdgeEllipse.cxx
                                 ${McSrc}/McCadDecompose/McCadEdgeCircle.cxx
                                 ${McSrc}/McCadDecompose/McCadEdgeSpline.cxx
+                                ${McSrc}/McCadDecompose/McCadEdgeHyperbola.cxx
+                                ${McSrc}/McCadDecompose/McCadEdgeParabola.cxx
                                 ${McSrc}/McCadDecompose/McCadSplitCylinders.cxx
                                 ${McSrc}/McCadDecompose/McCadSplitCylnPln.cxx
                                 ${McSrc}/McCadDecompose/McCadSplitConePln.cxx
+                                ${McSrc}/McCadDecompose/McCadSplitConeCyln.cxx
+                                ${McSrc}/McCadDecompose/McCadSplitConeCone.cxx
                                 ${McSrc}/McCadDecompose/McCadSurface.cxx
                                 ${McSrc}/McCadDecompose/McCadBndSurface.cxx
                                 ${McSrc}/McCadDecompose/McCadAstSurface.cxx

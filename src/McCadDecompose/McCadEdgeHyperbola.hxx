@@ -1,11 +1,11 @@
-#ifndef MCCADEDGESPLINE_HXX
-#define MCCADEDGESPLINE_HXX
+#ifndef MCCADEDGEHYPERBOLA_HXX
+#define MCCADEDGEHYPERBOLA_HXX
 
 #include "McCadEdge.hxx"
 
-class McCadEdgeSpline : public McCadEdge
+class McCadEdgeHyperbola : public McCadEdge
 {
-public:
+public:    
 
     void* operator new(size_t,void* anAddress)
     {
@@ -21,10 +21,9 @@ public:
     }
 
 public:
-    McCadEdgeSpline();
-    ~McCadEdgeSpline();
-    McCadEdgeSpline(const TopoDS_Edge &theEdge);
+    McCadEdgeHyperbola();
+    McCadEdgeHyperbola(const TopoDS_Edge &theEdge);
+    ~McCadEdgeHyperbola();
 };
 
-
-#endif // MCCADEDGESPLINE_HXX
+#endif // MCCADEDGEHYPERBOLA_HXX

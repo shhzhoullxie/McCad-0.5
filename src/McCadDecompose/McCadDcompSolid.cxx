@@ -61,6 +61,8 @@
 #include "McCadEdgeCircle.hxx"
 #include "McCadEdgeEllipse.hxx"
 #include "McCadEdgeSpline.hxx"
+#include "McCadEdgeHyperbola.hxx"
+#include "McCadEdgeParabola.hxx"
 
 McCadDcompSolid::McCadDcompSolid()
 {
@@ -296,7 +298,6 @@ void McCadDcompSolid::GenSurfaceList()
             {
                 m_ConeList.push_back(pBndSurf);
             }
-
         }
         else
         {
@@ -917,6 +918,16 @@ void McCadDcompSolid::GenEdges(McCadBndSurface *& pBndSurf)
             case GeomAbs_Ellipse:
             {
                 pEdge = new McCadEdgeEllipse(edge);
+                break;
+            }
+            case GeomAbs_Hyperbola:
+            {
+                pEdge = new McCadEdgeHyperbola(edge);
+                break;
+            }
+            case GeomAbs_Parabola:
+            {
+                pEdge = new McCadEdgeParabola(edge);
                 break;
             }
             default:

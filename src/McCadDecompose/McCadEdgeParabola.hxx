@@ -1,9 +1,9 @@
-#ifndef MCCADEDGESPLINE_HXX
-#define MCCADEDGESPLINE_HXX
+#ifndef MCCADEDGEPARABOLA_HXX
+#define MCCADEDGEPARABOLA_HXX
 
 #include "McCadEdge.hxx"
 
-class McCadEdgeSpline : public McCadEdge
+class McCadEdgeParabola : public McCadEdge
 {
 public:
 
@@ -20,11 +20,10 @@ public:
         if (anAddress) Standard::Free((Standard_Address&)anAddress);
     }
 
-public:
-    McCadEdgeSpline();
-    ~McCadEdgeSpline();
-    McCadEdgeSpline(const TopoDS_Edge &theEdge);
+    McCadEdgeParabola();
+    McCadEdgeParabola(const TopoDS_Edge &theEdge);
+    ~McCadEdgeParabola();
+
 };
 
-
-#endif // MCCADEDGESPLINE_HXX
+#endif // MCCADEDGEPARABOLA_HXX
