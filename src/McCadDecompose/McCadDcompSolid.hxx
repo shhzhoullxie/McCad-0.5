@@ -85,6 +85,7 @@ private:
     vector<McCadBndSurface*> m_PlaneList;                   /**< The bundary planes of solid */
     vector<McCadBndSurface*> m_CylinderList;                /**< The bundary cylinders of solid */
     vector<McCadBndSurface*> m_ConeList;                    /**< The bundary cones of solid */
+    vector<McCadBndSurface*> m_SphereList;                  /**< The bundary cones of solid */
     vector<McCadSurface*> m_SplitFaceList;                  /**< The splitting face list */
 
     vector<McCadAstSurface*> m_AstFaceList;                 /**< The assisted splitting surface list */
@@ -104,6 +105,7 @@ public:
     friend class McCadSplitConePln;
     friend class McCadSplitConeCyln;
     friend class McCadSplitConeCone;
+    friend class McCadSplitSphereCurveSurf;
 
 };
 

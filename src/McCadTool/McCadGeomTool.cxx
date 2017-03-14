@@ -681,6 +681,111 @@ TopoDS_Face McCadGeomTool::FuseCylinders(TopoDS_Face &faceA, TopoDS_Face &faceB)
 
 
 /** ***************************************************************************
+* @brief  Fuse two spheres with common edge and same geometries
+* @param  TopoDS_Face & faceA    input face A
+*         TopoDS_Face & faceB    input face B
+* @return Standard_Boolean       if there are same edge return true, vis return false
+*
+* @date 11/03/2017
+* @modify
+* @author  Lei Lu
+******************************************************************************/
+TopoDS_Face McCadGeomTool::FuseSphere(TopoDS_Face &faceA, TopoDS_Face &faceB)
+{
+    Standard_Real UMin1,UMax1,VMin1,VMax1;
+    BRepTools::UVBounds(faceA,UMin1,UMax1,VMin1,VMax1);
+
+    Standard_Real UMin2,UMax2,VMin2,VMax2;
+    BRepTools::UVBounds(faceB,UMin2,UMax2,VMin2,VMax2);
+
+    McCadMathTool::ZeroValue(UMin1,1.e-7);
+    McCadMathTool::ZeroValue(UMin2,1.e-7);
+    McCadMathTool::ZeroValue(UMax1,1.e-7);
+    McCadMathTool::ZeroValue(UMax2,1.e-7);
+    McCadMathTool::ZeroValue(VMin1,1.e-7);
+    McCadMathTool::ZeroValue(VMin2,1.e-7);
+    McCadMathTool::ZeroValue(VMax1,1.e-7);
+    McCadMathTool::ZeroValue(VMax2,1.e-7);
+
+    Standard_Boolean isUClose = Standard_False;
+    Standard_Boolean isVClose = Standard_False;
+
+    if ( Abs(UMax1-UMin1)+Abs(UMax2-UMin2) >= 2*M_PI )
+    {
+        isUClose = Standard_True;
+    }
+
+    Standard_Real UMin(0.0),UMax(0.0), VMin(0.0), VMax(0.0);
+
+    if(isUClose)
+    {
+        UMin = 0;
+        UMax = 2*M_PI;
+    }
+    else
+    {
+        Standard_Real UDis1 = fmod(Abs(UMin1-UMax2),2*M_PI);
+        Standard_Real UDis2 = fmod(Abs(UMin2-UMax1),2*M_PI);
+
+        if( UDis1 < UDis2)
+        {
+            UMin = UMin2;
+            UMax = UMax1;
+        }
+        else
+        {
+            UMin = UMin1;
+            UMax = UMax2;
+        }
+    }
+
+
+    if ( Abs(VMax1-VMin1)+Abs(VMax2-VMin2) >= 2*M_PI )
+    {
+        isVClose = Standard_True;
+    }
+
+    if(isVClose)
+    {
+        VMin = -1 * M_PI;
+        VMax =  M_PI;
+    }
+    else
+    {
+        Standard_Real VDis1 = fmod(Abs(VMin1-VMax2),2*M_PI);
+        Standard_Real VDis2 = fmod(Abs(VMin2-VMax1),2*M_PI);
+
+        if( VDis1 < VDis2)
+        {
+            VMin = VMin2;
+            VMax = VMax1;
+        }
+        else
+        {
+            VMin = VMin1;
+            VMax = VMax2;
+        }
+    }
+
+
+    TopLoc_Location loc;
+    const Handle(Geom_Surface)& aS1 = BRep_Tool::Surface(faceA,loc);
+
+    TopoDS_Face face  = BRepBuilderAPI_MakeFace(aS1, UMin,UMax, VMin, VMax, 1.e-7).Face();
+
+    /// adjust orientation if neccessary - in some cases this is needed (even for fusion of planar faces)!!!
+    if(face.Orientation() != faceA.Orientation())
+    {
+        face.Orientation(faceA.Orientation());
+    }
+
+    return face;
+}
+
+
+
+
+/** ***************************************************************************
 * @brief  Fuse two cylinders with common straight edge and same geometries
 * @param  TopoDS_Face & faceA    input face A
 *         TopoDS_Face & faceB    input face B

@@ -220,7 +220,7 @@ ADD_LIBRARY (TKMcCadAEV		${McSrc}/McCadAEV/McCadAEV_Application.cxx
                                 ${McSrc}/McCadAEV/McCadAEV_ListIteratorOfListOfEditorPtr_0.cxx
                                 ${McSrc}/McCadAEV/McCadAEV_SequenceNodeOfSequenceOfViewerPtr_0.cxx
                                 ${McSrc}/McCadAEV/McCadAEV_ListNodeOfListOfViewerPtr_0.cxx
-                                ${McSrc}/McCadAEV/McCadAEV_ListIteratorOfListOfViewerPtr_0.cxx )
+                                ${McSrc}/McCadAEV/McCadAEV_ListIteratorOfListOfViewerPtr_0.cxx)
 
 ADD_LIBRARY (TKMcCadMcVoid 	#${McSrc}/McCadMcVoid/McCadMcVoid_Generator.cxx
                                 #${McSrc}/McCadMcVoid/McCadMcVoid.cxx
@@ -255,7 +255,9 @@ ADD_LIBRARY (TKMcCadDecompose	${McSrc}/McCadDecompose/McCadDecompose.cxx
                                 ${McSrc}/McCadDecompose/McCadTriangle.cxx
                                 ${McSrc}/McCadDecompose/McCadBndSurfCylinder.cxx
                                 ${McSrc}/McCadDecompose/McCadBndSurfPlane.cxx
+                                ${McSrc}/McCadDecompose/McCadBndSurfCone.cxx
                                 ${McSrc}/McCadDecompose/McCadAstSurfPlane.cxx
+                                ${McSrc}/McCadDecompose/McCadBndSurfSphere.cxx
                                 ${McSrc}/McCadDecompose/McCadDcompSolid.cxx
                                 ${McSrc}/McCadDecompose/McCadEdge.cxx
                                 ${McSrc}/McCadDecompose/McCadEdgeLine.cxx
@@ -275,7 +277,7 @@ ADD_LIBRARY (TKMcCadDecompose	${McSrc}/McCadDecompose/McCadDecompose.cxx
                                 ${McSrc}/McCadDecompose/McCadSelSplitSurf.cxx
                                 ${McSrc}/McCadDecompose/McCadRepair.cxx
                                 ${McSrc}/McCadDecompose/McCadDcompGeomData.cxx
-                                ${McSrc}/McCadDecompose/McCadBndSurfCone.cxx)
+                                ${McSrc}/McCadDecompose/McCadSplitSphereCurveSurf.cxx)
 
 ADD_LIBRARY (TKMcCadTool	${McSrc}/McCadTool/McCadTool_Task.cxx
                                 ${McSrc}/McCadTool/McCadTool_TaskMaster.cxx
