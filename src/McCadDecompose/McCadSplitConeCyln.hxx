@@ -33,13 +33,13 @@ public:
     void GenSplitSurfaces(McCadDcompSolid *& pSolid);
 
 private:
-    /**< Detect the common edge of cone and cylinder */
-    Standard_Boolean HasComCurvEdge(McCadBndSurfCylinder *& pSurfA,
-                                    McCadBndSurfCone *& pSurfB,
-                                    McCadEdge *&pEdge);
+    /**< Detect the common circle edge of cone and cylinder */
+    Standard_Boolean HasComCircleEdge(McCadBndSurfCylinder *& pSurfA,
+                                      McCadBndSurfCone *& pSurfB,
+                                      McCadEdge *&pEdge);
 
-    /** Generate splitting surface through the curve */
-    McCadAstSurfPlane * GenSurfThroughCurves(McCadEdge *&pEdge);
+    /** Generate splitting surface through the circle */
+    McCadAstSurfPlane * GenSurfThroughCircle(McCadEdge *&pEdge);
 
 private:
 

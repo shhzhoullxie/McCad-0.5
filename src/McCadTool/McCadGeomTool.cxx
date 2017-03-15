@@ -21,6 +21,8 @@
 #include <gp_Elips.hxx>
 #include <gp_Pnt.hxx>
 #include <gp_Circ.hxx>
+#include <gp_Hypr.hxx>
+#include <gp_Parab.hxx>
 #include <GProp_GProps.hxx>
 
 #include "McCadConvertConfig.hxx"
@@ -1023,7 +1025,7 @@ Standard_Boolean McCadGeomTool::IsSameEdge(const TopoDS_Edge &edgeA,
 
 
 /** ***************************************************************************
-* @brief  If the two cylinders have common edge or not
+* @brief  If the two ellipse circles are same or not
 * @param
 * @return Bool
 *
@@ -1059,7 +1061,7 @@ Standard_Boolean McCadGeomTool::IsSameEllipseEdge(const TopoDS_Edge &edgeA,
 
     gp_Pnt pntMidB;
     Standard_Real fMidB = (fStartB+fEndB)/2.0;
-    theCurveA->D0(fMidB, pntMidB);
+    theCurveB->D0(fMidB, pntMidB);
 
     // If the middle points are not same, the two ellipses are not same
     if(!pntMidA.IsEqual(pntMidB,1.0e-5))
@@ -1090,8 +1092,146 @@ Standard_Boolean McCadGeomTool::IsSameEllipseEdge(const TopoDS_Edge &edgeA,
 
 
 
+
 /** ***************************************************************************
-* @brief  If the two cylinders have common edge or not
+* @brief  If the two hyperbolas are same or not
+* @param
+* @return Bool
+*
+* @date 13/05/2015
+* @modify 13/05/2015
+* @author  Lei Lu
+******************************************************************************/
+Standard_Boolean McCadGeomTool::IsSameHyperbolaEdge(const TopoDS_Edge &edgeA,
+                                                    const TopoDS_Edge &edgeB,
+                                                    Standard_Real dis)
+{
+    /// Get the start and end points of the curves
+    Standard_Real fStartA, fEndA;
+    Handle(Geom_Curve) theCurveA = BRep_Tool::Curve(edgeA, fStartA, fEndA);
+
+    Standard_Real fStartB, fEndB;
+    Handle(Geom_Curve) theCurveB = BRep_Tool::Curve(edgeB, fStartB, fEndB);
+
+    GeomAdaptor_Curve gp_CurveA(theCurveA);
+    GeomAdaptor_Curve gp_CurveB(theCurveB);
+
+    gp_Pnt posStartA, posEndA;
+    theCurveA->D0(fStartA, posStartA);
+    theCurveA->D0(fEndA, posEndA);
+
+    gp_Pnt posStartB, posEndB;
+    theCurveB->D0(fStartB, posStartB);
+    theCurveB->D0(fEndB, posEndB);
+
+    gp_Pnt pntMidA;
+    Standard_Real fMidA = (fStartA+fEndA)/2.0;
+    theCurveA->D0(fMidA, pntMidA);
+
+    gp_Pnt pntMidB;
+    Standard_Real fMidB = (fStartB+fEndB)/2.0;
+    theCurveB->D0(fMidB, pntMidB);
+
+    // If the middle points are not same, the two ellipses are not same
+    if(!pntMidA.IsEqual(pntMidB,1.0e-5))
+    {
+        return Standard_False;
+    }
+
+    gp_Hypr HyperbolaA = gp_CurveA.Hyperbola();
+    gp_Hypr HyperbolaB = gp_CurveB.Hyperbola();
+
+    // Major and Minor radius are same
+    if( Abs(HyperbolaA.MinorRadius() - HyperbolaB.MinorRadius()) <= 1.0e-5
+        && Abs(HyperbolaA.MajorRadius() - HyperbolaB.MajorRadius()) <= 1.0e-5 )
+    {
+        if((posStartA.Distance(posEndB) <= dis && posEndA.Distance(posStartB)<= dis)
+            || (posStartA.Distance(posStartB) <= dis && posEndB.Distance(posEndA)<= dis))
+        {
+            return Standard_True;
+        }
+        else
+        {
+            return Standard_False;
+        }
+    }
+
+    return Standard_False;
+}
+
+
+
+
+/** ***************************************************************************
+* @brief  If the two parabolas are same or not
+* @param
+* @return Bool
+*
+* @date 13/05/2015
+* @modify 13/05/2015
+* @author  Lei Lu
+******************************************************************************/
+Standard_Boolean McCadGeomTool::IsSameParabolaEdge(const TopoDS_Edge &edgeA,
+                                                    const TopoDS_Edge &edgeB,
+                                                    Standard_Real dis)
+{
+    /// Get the start and end points of the curves
+    Standard_Real fStartA, fEndA;
+    Handle(Geom_Curve) theCurveA = BRep_Tool::Curve(edgeA, fStartA, fEndA);
+
+    Standard_Real fStartB, fEndB;
+    Handle(Geom_Curve) theCurveB = BRep_Tool::Curve(edgeB, fStartB, fEndB);
+
+    GeomAdaptor_Curve gp_CurveA(theCurveA);
+    GeomAdaptor_Curve gp_CurveB(theCurveB);
+
+    gp_Pnt posStartA, posEndA;
+    theCurveA->D0(fStartA, posStartA);
+    theCurveA->D0(fEndA, posEndA);
+
+    gp_Pnt posStartB, posEndB;
+    theCurveB->D0(fStartB, posStartB);
+    theCurveB->D0(fEndB, posEndB);
+
+    gp_Pnt pntMidA;
+    Standard_Real fMidA = (fStartA+fEndA)/2.0;
+    theCurveA->D0(fMidA, pntMidA);
+
+    gp_Pnt pntMidB;
+    Standard_Real fMidB = (fStartB+fEndB)/2.0;
+    theCurveB->D0(fMidB, pntMidB);
+
+    // If the middle points are not same, the two ellipses are not same
+    if(!pntMidA.IsEqual(pntMidB,1.0e-5))
+    {
+        return Standard_False;
+    }
+
+    gp_Parab ParabolaA = gp_CurveA.Parabola();
+    gp_Parab ParabolaB = gp_CurveB.Parabola();
+
+    // Major and Minor radius are same
+    if( ParabolaA.Focus().Distance(ParabolaB.Focus()) <= dis )
+    {
+        if((posStartA.Distance(posEndB) <= dis && posEndA.Distance(posStartB)<= dis)
+            || (posStartA.Distance(posStartB) <= dis && posEndB.Distance(posEndA)<= dis))
+        {
+            return Standard_True;
+        }
+        else
+        {
+            return Standard_False;
+        }
+    }
+
+    return Standard_False;
+}
+
+
+
+
+/** ***************************************************************************
+* @brief  If the two circles are same or not
 * @param
 * @return Bool
 *

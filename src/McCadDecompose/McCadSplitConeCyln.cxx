@@ -44,9 +44,9 @@ void McCadSplitConeCyln::GenSplitSurfaces( McCadDcompSolid *& pSolid)
 
             ///< Detect the two cylinders are connected with circle curve
             McCadEdge *pCurveEdge = NULL;
-            if(HasComCurvEdge(pBndSurfA,pBndSurfB,pCurveEdge))
+            if(HasComCircleEdge(pBndSurfA,pBndSurfB,pCurveEdge))
             {
-                McCadAstSurfPlane * pAstFace = GenSurfThroughCurves(pCurveEdge);
+                McCadAstSurfPlane * pAstFace = GenSurfThroughCircle(pCurveEdge);
                 pAstFace->SetCombined(Standard_True); // The assisted surface can not be merged
                 AstFaceList.push_back(pAstFace);
 
@@ -70,9 +70,9 @@ void McCadSplitConeCyln::GenSplitSurfaces( McCadDcompSolid *& pSolid)
 * @modify
 * @author  Lei Lu
 ******************************************************************************/
-Standard_Boolean McCadSplitConeCyln::HasComCurvEdge(McCadBndSurfCylinder *&pSurfA,
-                                                     McCadBndSurfCone *&pSurfB,
-                                                     McCadEdge *& pEdge)
+Standard_Boolean McCadSplitConeCyln::HasComCircleEdge(McCadBndSurfCylinder *&pSurfA,
+                                                      McCadBndSurfCone *&pSurfB,
+                                                      McCadEdge *& pEdge)
 {
     for(unsigned i = 0; i < pSurfA->GetEdgeList().size(); i++)
     {
@@ -113,7 +113,7 @@ Standard_Boolean McCadSplitConeCyln::HasComCurvEdge(McCadBndSurfCylinder *&pSurf
 * @modify
 * @author  Lei Lu
 ******************************************************************************/
-McCadAstSurfPlane * McCadSplitConeCyln::GenSurfThroughCurves(McCadEdge *& pEdge)
+McCadAstSurfPlane * McCadSplitConeCyln::GenSurfThroughCircle(McCadEdge *& pEdge)
 {
     gp_Pnt pntStart = pEdge->StartPoint();
     gp_Pnt pntEnd = pEdge->EndPoint();

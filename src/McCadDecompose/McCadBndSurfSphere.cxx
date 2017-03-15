@@ -20,7 +20,6 @@ McCadBndSurfSphere::McCadBndSurfSphere()
 
 McCadBndSurfSphere::McCadBndSurfSphere(const TopoDS_Face &theFace):McCadBndSurface(theFace)
 {
-
 }
 
 McCadBndSurfSphere::~McCadBndSurfSphere()
@@ -210,8 +209,6 @@ Standard_Boolean McCadBndSurfSphere::IsPntOnSurf(gp_Pnt &thePnt, Standard_Real d
 
 
 
-
-
 /** ***************************************************************************
 * @brief  Extract the radius and center of sphere and create a complete sphere
 *         according to these parameters
@@ -256,9 +253,8 @@ Standard_Real McCadBndSurfSphere::GetRadius() const
 
 
 
-
 /** ***************************************************************************
-* @brief  Get the radius of sphere
+* @brief  Get the center of sphere
 * @param
 * @return Standard_Real
 *

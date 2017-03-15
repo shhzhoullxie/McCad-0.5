@@ -32,10 +32,10 @@ public:
     void GenSplitSurfaces(McCadDcompSolid *& pSolid);
 
 private:
-    /**< Two cones have common curved edges */
-    Standard_Boolean HasComCurvEdge(McCadBndSurfCone *& pSurfA,
-                                    McCadBndSurfCone *& pSurfB,
-                                    McCadEdge *&pEdge);
+    /**< Two cones have common circle edges */
+    Standard_Boolean HasComCircleEdge(McCadBndSurfCone *& pSurfA,
+                                      McCadBndSurfCone *& pSurfB,
+                                      McCadEdge *&pEdge);
 
     /**< Two cones have common straight edges */
     Standard_Boolean HasComLineEdge(McCadBndSurfCone *& pSurfA,
@@ -43,9 +43,9 @@ private:
                                     McCadEdge *& pEdge);
 
     /** Generate splitting surface through the circle */
-    McCadAstSurfPlane * GenSurfThroughCurve(McCadEdge *&pEdge);
+    McCadAstSurfPlane * GenSurfThroughCircle(McCadEdge *&pEdge);
     /**< Generate splitting surfaces through the straight edge */
-    McCadAstSurfPlane * GenSurfThroughEdge(TopoDS_Face &theFaceA,
+    McCadAstSurfPlane * GenSurfThroughLine(TopoDS_Face &theFaceA,
                                            TopoDS_Face &theFaceB,
                                            McCadEdge *&pEdge);
 

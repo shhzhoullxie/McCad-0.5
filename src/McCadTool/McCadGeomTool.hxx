@@ -94,6 +94,14 @@ private:
     static Standard_Boolean IsSameCircleEdge(const TopoDS_Edge &edgeA,
                                              const TopoDS_Edge &edgeB,
                                              Standard_Real dis);
+    /**< Judge the input two edges are same hyperbola edges or not */
+    static Standard_Boolean IsSameHyperbolaEdge(const TopoDS_Edge &edgeA,
+                                                const TopoDS_Edge &edgeB,
+                                                Standard_Real dis);
+    /**< Judge the input two edges are same parabola edges or not */
+    static Standard_Boolean IsSameParabolaEdge(const TopoDS_Edge &edgeA,
+                                               const TopoDS_Edge &edgeB,
+                                               Standard_Real dis);
 
 private:
 

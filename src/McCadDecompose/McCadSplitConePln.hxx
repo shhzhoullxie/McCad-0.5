@@ -8,7 +8,6 @@
 #include "McCadDcompSolid.hxx"
 #include "McCadBndSurfPlane.hxx"
 
-
 using namespace std;
 
 class McCadSplitConePln
@@ -42,14 +41,14 @@ private:
     void CrtSplitSurfaces(McCadBndSurfCone *& pConeFace, vector<McCadAstSurface *> &astFace_list);
 
     /**< Create splitting surfaces through the given straight edge */
-    McCadAstSurfPlane* CrtSplitSurfThroughEdge(McCadBndSurfCone *& pConeFace,
-                                               McCadEdge *& pEdge);
+    McCadAstSurfPlane* CrtSplitSurfThroughLine(McCadBndSurfCone *& pConeFace,McCadEdge *& pEdge);
+
     /**< Create splitting surfaces through the given two straight edges */
-    McCadAstSurfPlane* CrtSplitSurfThroughTwoEdges(McCadEdge *& pEdgeA,
-                                                   McCadEdge *& pEdgeB);
+    McCadAstSurfPlane* CrtSplitSurfThroughTwoLines(McCadEdge *& pEdgeA,McCadEdge *& pEdgeB);
+
     /**< Search the common straight edge of given cone and plane  */
-    Standard_Boolean FindComLineEdge(McCadBndSurfCone *& pSurfCone,
-                                     McCadBndSurfPlane *& pSurfPln);
+    Standard_Boolean FindComLineEdge(McCadBndSurfCone *& pSurfCone,McCadBndSurfPlane *& pSurfPln);
+
     /**< Calculate the radian of curved surface */
     Standard_Real CalCurveRadian(McCadBndSurface *& pBndCone);
 

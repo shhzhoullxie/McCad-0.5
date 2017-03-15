@@ -40,8 +40,8 @@ private:
     Standard_Real GetRadius() const;            /**< Get the radius of sphere */
     gp_Pnt GetCenter() const;                   /**< Get the center of sphere */
 
-    gp_Pnt m_Center;                /**< Top point of cone  */
-    Standard_Real m_Radius;         /**< SemiAngle of cone  */
+    gp_Pnt m_Center;                            /**< Top point of cone  */
+    Standard_Real m_Radius;                     /**< SemiAngle of cone  */
 
     Standard_Boolean m_bHasAstSplitSurfaces;    /**< If the sphere has assisted splitting surface */
     Bnd_Box m_SphereBndBox;                     /**< The boundary box of whole cylinder */

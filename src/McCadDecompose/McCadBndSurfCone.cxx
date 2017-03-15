@@ -63,16 +63,31 @@ Standard_Boolean McCadBndSurfCone::TriangleCollision(McCadTriangle *& triangle, 
             continue;
         }
 
-        /* Distinguish which side does the point located.*/
-        Standard_Real aVal = McCadEvaluator::Evaluate(m_AdpSurface, point);
+        BRepAdaptor_Surface BS(m_plnPeak, Standard_True);
+        GeomAdaptor_Surface adptPlnPeak = BS.Surface();
 
-        if (aVal > 1.0e-2)              // Point located on the positive side of face
+        /* Evaluate the point is located at which sides of plane through the peak of cone*/
+        Standard_Real aValPln = McCadEvaluator::Evaluate(adptPlnPeak, point);
+
+        /// if the point on the outer side of the plane throughing the peak,
+        /// it means that it is on the positive side of cone.
+        if(aValPln > 1.0e-3)
         {
             iPosPnt ++;
         }
-        else if (aVal < -1.0e-2)        // Point located on the negative side of face
+        else
         {
-            iNegPnt ++;
+            /* Evaluate which side does the point located.*/
+            Standard_Real aVal = McCadEvaluator::Evaluate(m_AdpSurface, point);
+
+            if (aVal > 1.0e-2)              // Point located on the positive side of face
+            {
+                iPosPnt ++;
+            }
+            else if (aVal < -1.0e-2)        // Point located on the negative side of face
+            {
+                iNegPnt ++;
+            }
         }
 
         if (iPosPnt > 0 && iNegPnt > 0) // The points are on both sides of face
@@ -130,7 +145,7 @@ void McCadBndSurfCone::GenExtCone(Standard_Real length)
     TopLoc_Location loc;
     Handle(Geom_Surface) surface = BRep_Tool::Surface(*this,loc);
 
-    gp_Cone cone = m_AdpSurface.Cone();                   // Get the geometry of cone
+    gp_Cone cone = m_AdpSurface.Cone();                  // Get the geometry of cone
 
     m_Axis = cone.Position();                           // Get the coordinate system Ax3
     m_SemiAngle = cone.SemiAngle();                     // Get the semi angle of cone
@@ -166,6 +181,10 @@ void McCadBndSurfCone::GenExtCone(Standard_Real length)
     BRepBndLib::Add(m_coneSurf, m_ConeBndBox);
     m_ConeBndBox.SetGap(0.0);
 
+    /// Generate the plane through the peak of cone and the direction is axis of cone.
+    gp_Pln pln(m_Apex, m_Dir);
+    Standard_Real size = m_ConeLength;
+    m_plnPeak = BRepBuilderAPI_MakeFace(pln,-size,size,-size,size).Face();
 }
 
 
@@ -269,25 +288,9 @@ Standard_Boolean McCadBndSurfCone::IsPntOnSurf(gp_Pnt &thePnt, Standard_Real dis
 
 
 
-/** ******************************************************************************
-* @brief
-* @param
-* @return Standard_Real
-*
-* @date 27/06/2016
-* @modify
-* @author Lei Lu
-*********************************************************************************/
-Standard_Real McCadBndSurfCone::GetRadian() const
-{
-    return m_Radian;
-}
-
-
-
 
 /** ***************************************************************************
-* @brief
+* @brief  Add the edge as a splitting edge which could be add splitting surface
 * @param  McCadEdge *& pEdge
 * @return void
 *
@@ -301,8 +304,10 @@ void McCadBndSurfCone::AddConePlnSplitEdge(McCadEdge *& pEdge)
 }
 
 
+
+
 /** ******************************************************************************
-* @brief
+* @brief Get the splitting edges of cone which conect the cone with plane
 * @param
 * @return vector<McCadEdge*>
 *
@@ -319,8 +324,34 @@ vector<McCadEdge*> McCadBndSurfCone::GetConePlnSplitEdgeList() const
 }
 
 
+
 /** ******************************************************************************
-* @brief Get the center of cylindr which is one point on the axis
+* @brief The cone has assisted splitting surfaces for separating cone and
+*        plane.
+* @param
+* @return Standard_Boolean
+*
+* @date 15/03/2017
+* @modify
+* @author Lei Lu
+*********************************************************************************/
+Standard_Boolean McCadBndSurfCone::HasConePlnSplitSurf()
+{
+    if(m_ConePlnSplitEdgeList.empty() )
+    {
+        return Standard_False;
+    }
+    else
+    {
+        return Standard_True;
+    }
+}
+
+
+
+
+/** ******************************************************************************
+* @brief Get the peak of cone
 * @param
 * @return gp_Pnt
 *
@@ -333,3 +364,50 @@ gp_Pnt McCadBndSurfCone::GetPeak() const
     return m_Apex;
 }
 
+
+
+
+/** ******************************************************************************
+* @brief Get the direction of axis of cone
+* @param
+* @return gp_Dir
+*
+* @date 15/03/2017
+* @modify
+* @author Lei Lu
+*********************************************************************************/
+gp_Dir McCadBndSurfCone::GetDir() const
+{
+    return m_Dir;
+}
+
+
+
+/** ******************************************************************************
+* @brief Get the semi angle of cone
+* @param
+* @return Standard_Real
+*
+* @date 15/03/2017
+* @modify
+* @author Lei Lu
+*********************************************************************************/
+Standard_Real McCadBndSurfCone::GetSemiAngle() const
+{
+    return m_SemiAngle;
+}
+
+
+/** ******************************************************************************
+* @brief Get the radian of cone
+* @param
+* @return Standard_Real
+*
+* @date 27/06/2016
+* @modify
+* @author Lei Lu
+*********************************************************************************/
+Standard_Real McCadBndSurfCone::GetRadian() const
+{
+    return m_Radian;
+}

@@ -8,6 +8,10 @@ McCadSplitConeCone::McCadSplitConeCone()
 {
 }
 
+McCadSplitConeCone::~McCadSplitConeCone()
+{
+}
+
 
 /** ***************************************************************************
 * @brief Given a solid, trace the cones and cones and generate the splitting
@@ -26,7 +30,6 @@ void McCadSplitConeCone::GenSplitSurfaces( McCadDcompSolid *& pSolid)
 
     m_fLength = pSolid->m_fBoxSqLength;
 
-    //STEPControl_Writer wrt2;
     for(unsigned int i = 0; i < cone_list.size()-1; i++ )
     {
         McCadBndSurfCone *pBndSurfA = (McCadBndSurfCone*)cone_list.at(i);
@@ -34,23 +37,29 @@ void McCadSplitConeCone::GenSplitSurfaces( McCadDcompSolid *& pSolid)
         {
             McCadBndSurfCone *pBndSurfB = (McCadBndSurfCone*)cone_list.at(j);
 
-            // They are not same cylinders
+            // They are not same cones
             if (pBndSurfA->GetSurfNum() == pBndSurfB->GetSurfNum())
             {
                 continue;
             }
 
+            // If they are not splitting surfaces neither
             if(pBndSurfA->GetSplitSurfNum() == 0 && pBndSurfB->GetSplitSurfNum() == 0)
             {
                 continue;
             }
 
-            //Handle_TopTools_HSequenceOfShape edge_list = new TopTools_HSequenceOfShape();
-            McCadEdge *pLineEdge = NULL;
+            // If the two cones have different oritations
+            if(pBndSurfA->Orientation() != pBndSurfB->Orientation())
+            {
+                continue;
+            }
 
+
+            McCadEdge *pLineEdge = NULL;
             if(HasComLineEdge(pBndSurfA,pBndSurfB,pLineEdge))
             {
-               McCadAstSurfPlane * pAstFace = GenSurfThroughEdge(*pBndSurfA,*pBndSurfB,pLineEdge);
+               McCadAstSurfPlane * pAstFace = GenSurfThroughLine(*pBndSurfA,*pBndSurfB,pLineEdge);
                AstFaceList.push_back(pAstFace);
 
                //pBndSurfA->AddCylnCylnSplitEdge(pEdge);//20170311
@@ -62,22 +71,19 @@ void McCadSplitConeCone::GenSplitSurfaces( McCadDcompSolid *& pSolid)
 
             ///< Detect the two cylinders are connected with ellipse circle curve
             McCadEdge *pCurveEdge = NULL;
-            if(HasComCurvEdge(pBndSurfA,pBndSurfB,pCurveEdge))
+            if(HasComCircleEdge(pBndSurfA,pBndSurfB,pCurveEdge))
             {
-                McCadAstSurfPlane * pAstFace = GenSurfThroughCurve(pCurveEdge);
+                McCadAstSurfPlane * pAstFace = GenSurfThroughCircle(pCurveEdge);
                 AstFaceList.push_back(pAstFace);
-
-                //pBndSurfA->AddCylnCylnSplitEdge(pCurveEdge);
-                //pBndSurfB->AddCylnCylnSplitEdge(pCurveEdge);
             }
         }
     }
 
     // Merge the generated assisted splitting surfaces
-    if(AstFaceList.size() >= 2)
-    {
+    //if(AstFaceList.size() >= 2)
+    //{
         //CombAndMergeSurfaces(AstFaceList);
-    }
+    //}
 }
 
 
@@ -93,19 +99,14 @@ void McCadSplitConeCone::GenSplitSurfaces( McCadDcompSolid *& pSolid)
 * @modify //
 * @author  Lei Lu
 ******************************************************************************/
-Standard_Boolean McCadSplitConeCone::HasComCurvEdge(McCadBndSurfCone *&pSurfA,
-                                                    McCadBndSurfCone *&pSurfB,
-                                                    McCadEdge *& pEdge)
+Standard_Boolean McCadSplitConeCone::HasComCircleEdge(McCadBndSurfCone *&pSurfA,
+                                                      McCadBndSurfCone *&pSurfB,
+                                                      McCadEdge *& pEdge)
 {
     for(unsigned i = 0; i < pSurfA->GetEdgeList().size(); i++)
     {
-        McCadEdge *pEdgeA = pSurfA->GetEdgeList().at(i);
-        if(pEdgeA->GetType() == Line)
-        {
-            continue;
-        }
-
-        if(pEdgeA->GetType() == Spline )
+        McCadEdge *pEdgeA = pSurfA->GetEdgeList().at(i);        
+        if(pEdgeA->GetType() == Line && pEdgeA->GetType() == Spline )
         {
             continue;
         }
@@ -119,7 +120,8 @@ Standard_Boolean McCadSplitConeCone::HasComCurvEdge(McCadBndSurfCone *&pSurfA,
                 continue;
             }
 
-            if(pEdgeB->GetType() == Circle)
+            /// If the connect edge is circle or ellipse circle
+            if(pEdgeB->GetType() == Circle || pEdgeB->GetType() == Ellipse)
             {
                 if (pEdgeA->IsSame(pEdgeB,1.0e-5))
                 {
@@ -130,17 +132,7 @@ Standard_Boolean McCadSplitConeCone::HasComCurvEdge(McCadBndSurfCone *&pSurfA,
                 }
             }
 
-            if(pEdgeB->GetType() == Ellipse )
-            {
-                if (pEdgeA->IsSame(pEdgeB,1.0e-5))
-                {
-                    pEdgeA->SetConvexity(concave);  // Set the convexity of two edges
-                    pEdgeB->SetConvexity(concave);
-                    pEdge = pEdgeA;
-                    return Standard_True;
-                }
-            }
-
+            /// If the connect edge is hyperbola or parabola
             if(pEdgeB->GetType() == Hyperbola || pEdgeB->GetType() == Parabola)
             {
                 if (pEdgeA->IsSame(pEdgeB,1.0e-5))
@@ -153,6 +145,7 @@ Standard_Boolean McCadSplitConeCone::HasComCurvEdge(McCadBndSurfCone *&pSurfA,
             }
         }
     }
+
     return Standard_False;
 }
 
@@ -167,7 +160,7 @@ Standard_Boolean McCadSplitConeCone::HasComCurvEdge(McCadBndSurfCone *&pSurfA,
 * @modify
 * @author  Lei Lu
 ******************************************************************************/
-McCadAstSurfPlane * McCadSplitConeCone::GenSurfThroughCurve(McCadEdge *& pEdge)
+McCadAstSurfPlane * McCadSplitConeCone::GenSurfThroughCircle(McCadEdge *& pEdge)
 {
     gp_Pnt pntStart = pEdge->StartPoint();
     gp_Pnt pntEnd = pEdge->EndPoint();
@@ -193,6 +186,7 @@ McCadAstSurfPlane * McCadSplitConeCone::GenSurfThroughCurve(McCadEdge *& pEdge)
 
 
 
+
 /** ***************************************************************************
 * @brief Generate a splitting surface through straight edge
 * @param TopoDS_Face &theFaceA,
@@ -204,7 +198,7 @@ McCadAstSurfPlane * McCadSplitConeCone::GenSurfThroughCurve(McCadEdge *& pEdge)
 * @modify
 * @author  Lei Lu
 ******************************************************************************/
-McCadAstSurfPlane * McCadSplitConeCone::GenSurfThroughEdge(TopoDS_Face &theFaceA,
+McCadAstSurfPlane * McCadSplitConeCone::GenSurfThroughLine(TopoDS_Face &theFaceA,
                                                            TopoDS_Face &theFaceB,
                                                            McCadEdge *& pEdge)
 {

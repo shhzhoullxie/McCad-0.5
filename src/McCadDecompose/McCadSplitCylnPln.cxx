@@ -113,7 +113,7 @@ void McCadSplitCylnPln::GenSplitSurfaces( McCadDcompSolid *& pSolid)
     // Merge the generated assisted splitting surfaces
     if(AstFaceList.size() >= 2)
     {
-        MergeSurfaces(AstFaceList);
+       MergeSurfaces(AstFaceList);
     }
 }
 
