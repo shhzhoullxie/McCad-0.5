@@ -634,9 +634,9 @@ Standard_Integer McCadGeomData::GetNewFaceNum(Standard_Integer iOldNum)
         iNewFaceNum = iter->second;
     }
 
-    /// on the basis of the initial cell number, refresh the number.
-    Standard_Integer iInitCellNum = McCadConvertConfig::GetInitCellNum()-1;
-    iNewFaceNum += iInitCellNum;
+    /// on the basis of the initial surface number, refresh the number.
+    Standard_Integer iInitSurfaceNum = McCadConvertConfig::GetInitSurfNum()-1;
+    iNewFaceNum += iInitSurfaceNum;
 
     return iNewFaceNum;
 }

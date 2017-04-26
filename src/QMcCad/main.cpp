@@ -121,9 +121,9 @@ int main(int argc, char *argv[]) {
 
     // handle input
     TCollection_AsciiString inName;
-//if(argc > 1)
+if(argc > 1)
 
-if (1)
+//if (1)
    {
         TCollection_AsciiString inParameter;
         inParameter = argv[1];

@@ -247,6 +247,8 @@ Handle(TopTools_HSequenceOfShape) McCadExDllStep_Step::Import()
 	McCadGUI_BaseDialogPtr theProgress = theGuiFactory->MakeDialog();
 	myProgress = theProgress;*/
 
+    cout<<"Testing................................................"<<endl;
+
 	if (!myFileName.IsEmpty())
 	{
 		OSD_Path thePath(myFileName);
@@ -264,8 +266,8 @@ Handle(TopTools_HSequenceOfShape) McCadExDllStep_Step::Import()
 			//myProgress->SetProgress(100);
 
 			if ( myReturnStatus == IFSelect_RetDone)
-			{
-				/*Standard_CString StepLogFile = "_Step.log";
+            {
+                /*Standard_CString StepLogFile = "_Step.log";
 				Standard_Boolean doAppend = Standard_True;
 				Message_PrinterOStream transferMessages(StepLogFile, doAppend);*/
 				//Obsolete in OCC63 : Interface_TraceFile::SetDefault(2,StepLogFile,Standard_True);
